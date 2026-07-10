@@ -1,4 +1,4 @@
-﻿require('dotenv').config();
+require('dotenv').config();
 const express    = require('express');
 const cors       = require('cors');
 const multer     = require('multer');
@@ -141,6 +141,10 @@ app.use((err, req, res, next) => {
     res.status(500).json({ success: false, message: err.message });
 });
 
-app.listen(PORT, () => {
-    console.log('Laser Point server at http://localhost:' + PORT);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log('Laser Point server at http://localhost:' + PORT);
+    });
+}
+
+module.exports = app;
