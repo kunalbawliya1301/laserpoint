@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laser Point · Premium Printing & Engraving</title>
+
+    <!-- ===== FAVICON ===== -->
+    <link rel="icon" type="image/png" sizes="512x512" href="./favicon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./favicon.png" />
+    <link rel="icon" type="image/png" sizes="32x32"  href="./favicon.png" />
+    <link rel="icon" type="image/png" sizes="16x16"  href="./favicon.png" />
+    <link rel="apple-touch-icon"                     href="./favicon.png" />
+    <meta name="theme-color" content="#0a0f1f" />
+    <meta name="msapplication-TileColor" content="#0a0f1f" />
+    <meta name="msapplication-TileImage" content="./favicon.png" />
+
+    <!-- Google Fonts: Playfair Display + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- AOS Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary: #0a0f1f;
+            --secondary: #141b2d;
+            --accent: #f5a623;
+            --accent-light: #f7c35c;
+            --text-primary: #ffffff;
+            --text-secondary: #b0c4de;
+            --text-dark: #0a0f1f;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-glow: rgba(245, 166, 35, 0.3);
+            --shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            --glass: rgba(255, 255, 255, 0.03);
+            --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            --whatsapp: #25D366;
+        }
+
+        /* Light theme */
+        [data-theme="light"] {
+            --primary: #f4f6fa;
+            --secondary: #e8ecf2;
+            --text-primary: #0a0f1f;
+            --text-secondary: #2d3748;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --glass: rgba(255, 255, 255, 0.6);
+            --shadow: 0 25px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            transition: background 0.5s ease, color 0.5s ease;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: #0a0f1f;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-orbs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.12;
+            animation: floatOrb 20s infinite alternate ease-in-out;
+        }
+
+        .orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: #f5a623;
+            top: -10%;
+            left: -10%;
+            animation-duration: 25s;
+        }
+
+        .orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: #7b61ff;
+            bottom: -10%;
+            right: -5%;
+            animation-duration: 30s;
+            animation-delay: 5s;
+        }
+
+        .orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: #00d4ff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 35s;
+            animation-delay: 10s;
+        }
+
+        @keyframes floatOrb {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(60px, -40px) scale(1.2);
+            }
+            66% {
+                transform: translate(-30px, 60px) scale(0.9);
+            }
+            100% {
+                transform: translate(40px, 30px) scale(1.1);
+            }
+        }
+
+        /* ===== GLASS NAVBAR ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 0.8rem 0;
+            background: rgba(10, 15, 31, 0.75);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="light"] nav {
+            background: rgba(244, 246, 250, 0.85);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        nav.scrolled {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 58px;
+            width: auto;
+            object-fit: contain;
+            mix-blend-mode: lighten;
+        }
+
+        [data-theme="light"] .logo img {
+            mix-blend-mode: multiply;
+        }
+
+        .footer-brand .logo img {
+            height: 80px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+            padding: 0.4rem;
+            border-radius: 50%;
+            background: var(--card-bg);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent);
+            transform: rotate(30deg);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.4rem;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 2.5px;
+            background: var(--text-primary);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        /* ===== WHATSAPP FLOATING BUTTON ===== */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+            background: var(--whatsapp);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            animation: pulseWhatsApp 2s infinite;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(37, 211, 102, 0.6);
+        }
+
+        @keyframes pulseWhatsApp {
+            0% {
+                box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 50px rgba(37, 211, 102, 0.7);
+            }
+            100% {
+                box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
+            }
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: #0a0f1f;
+            font-weight: 700;
+            padding: 1rem 2.8rem;
+            border-radius: 60px;
+            text-decoration: none;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 30px rgba(245, 166, 35, 0.35);
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(245, 166, 35, 0.5);
+        }
+
+        .btn-primary i {
+            margin-right: 0.6rem;
+        }
+
+        .btn-outline {
+            display: inline-block;
+            background: transparent;
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 0.9rem 2.4rem;
+            border-radius: 60px;
+            text-decoration: none;
+            border: 2px solid var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(245, 166, 35, 0.15);
+        }
+
+        /* ===== SECTION STYLES ===== */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 7rem 0;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: var(--card-bg);
+            color: var(--accent);
+            padding: 0.3rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border: 1px solid rgba(245, 166, 35, 0.15);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .section-title .highlight {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .section-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 560px;
+            font-weight: 300;
+        }
+
+        .section-centered {
+            text-align: center;
+        }
+
+        .section-centered .section-subtitle {
+            margin: 0 auto 2.5rem;
+        }
+
+        /* ===== HERO WITH FACTORY IMAGE ===== */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 6rem;
+            position: relative;
+            background: var(--primary);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.15;
+            transition: opacity 0.6s ease;
+        }
+
+        [data-theme="light"] .hero-bg img {
+            opacity: 0.08;
+        }
+
+        .hero-bg .gradient-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(10, 15, 31, 0.85) 0%, rgba(10, 15, 31, 0.4) 50%, rgba(10, 15, 31, 0.85) 100%);
+        }
+
+        [data-theme="light"] .hero-bg .gradient-overlay {
+            background: linear-gradient(135deg, rgba(244, 246, 250, 0.9) 0%, rgba(244, 246, 250, 0.5) 50%, rgba(244, 246, 250, 0.9) 100%);
+        }
+
+        .hero-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-display);
+            font-size: 4.5rem;
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content h1 .highlight {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 480px;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .hero-stats .stat h3 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .hero-stats .stat p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-visual .orb-ring {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            border: 1px solid rgba(245, 166, 35, 0.15);
+            position: relative;
+            animation: spin 30s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hero-visual .orb-ring .inner {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(245, 166, 35, 0.1), transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: var(--accent);
+            animation: pulseGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 40px rgba(245, 166, 35, 0.1);
+            }
+            100% {
+                box-shadow: 0 0 80px rgba(245, 166, 35, 0.3);
+            }
+        }
+
+        .floating-badge {
+            position: absolute;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 0.6rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            animation: floatBadge 4s ease-in-out infinite alternate;
+            font-weight: 500;
+        }
+
+        .floating-badge i {
+            color: var(--accent);
+        }
+
+        .floating-badge:nth-child(2) {
+            top: 10%;
+            right: -10%;
+            animation-delay: 1s;
+        }
+
+        .floating-badge:nth-child(3) {
+            bottom: 10%;
+            left: -10%;
+            animation-delay: 2s;
+        }
+
+        @keyframes floatBadge {
+            0% {
+                transform: translateY(0px);
+            }
+            100% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* ===== SERVICES ===== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            height: 380px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+        }
+
+        /* Machine background image */
+        .service-card .sc-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: brightness(0.80) saturate(0.8);
+        }
+
+        .service-card:hover .sc-bg {
+            transform: scale(1.08);
+            filter: brightness(0.50) saturate(0.6);
+        }
+
+        /* Gradient overlay always present, deepens on hover */
+        .service-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top,
+                rgba(5, 8, 20, 0.95) 0%,
+                rgba(5, 8, 20, 0.55) 45%,
+                rgba(5, 8, 20, 0.1) 100%
+            );
+            transition: background 0.5s ease;
+            z-index: 1;
+        }
+
+        .service-card:hover::after {
+            background: linear-gradient(
+                to top,
+                rgba(5, 8, 20, 0.98) 0%,
+                rgba(5, 8, 20, 0.75) 55%,
+                rgba(5, 8, 20, 0.25) 100%
+            );
+        }
+
+        /* Gold top accent bar */
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 3;
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(245, 166, 35, 0.35);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(245, 166, 35, 0.15);
+        }
+
+        /* Content sits above overlay */
+        .service-card .sc-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.8rem 1.6rem;
+            z-index: 2;
+            text-align: left;
+        }
+
+        /* Gold tag pill at top-left */
+        .service-card .sc-tag {
+            position: absolute;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 2;
+            background: rgba(245, 166, 35, 0.15);
+            border: 1px solid rgba(245, 166, 35, 0.35);
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            border-radius: 60px;
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: all 0.4s ease 0.1s;
+        }
+
+        .service-card:hover .sc-tag {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .service-card .sc-content h3 {
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+
+        .service-card .sc-content p {
+            font-size: 0.85rem;
+            color: rgba(176, 196, 222, 0.85);
+            font-weight: 300;
+            line-height: 1.6;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .service-card:hover .sc-content p {
+            max-height: 80px;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Gold arrow icon */
+        .service-card .sc-content .sc-arrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.8rem;
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: all 0.4s ease 0.1s;
+        }
+
+        .service-card:hover .sc-content .sc-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ===== WORK GALLERY ===== */
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .work-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .work-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .work-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .work-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .work-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .work-item:hover .overlay {
+            transform: translateY(0);
+        }
+
+        .work-item .overlay h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .work-item .overlay p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .testimonial-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.4s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(245, 166, 35, 0.15);
+        }
+
+        .testimonial-card .stars {
+            color: var(--accent);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.8rem;
+        }
+
+        .testimonial-card blockquote {
+            font-style: italic;
+            font-weight: 300;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .testimonial-card .author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .testimonial-card .author .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #0a0f1f;
+        }
+
+        .testimonial-card .author .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .testimonial-card .author .role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== CONTACT / FORM ===== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .contact-info .info-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            margin-bottom: 1.8rem;
+        }
+
+        .contact-info .info-item .icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(245, 166, 35, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .contact-info .info-item h4 {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .contact-info .info-item p {
+            color: var(--text-secondary);
+            font-weight: 300;
+            font-size: 0.9rem;
+        }
+
+        .form-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .form-container h3 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-container .form-sub {
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(245, 166, 35, 0.08);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group .file-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            border: 1px dashed rgba(245, 166, 35, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .form-group .file-input-wrap input[type="file"] {
+            border: none;
+            padding: 0.3rem 0;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .form-group .file-input-wrap input[type="file"]::file-selector-button {
+            background: var(--accent);
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #0a0f1f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-group .file-input-wrap input[type="file"]::file-selector-button:hover {
+            transform: scale(1.05);
+        }
+
+        .price-display {
+            background: rgba(245, 166, 35, 0.08);
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(245, 166, 35, 0.15);
+            margin-top: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .price-display .amount {
+            color: var(--accent);
+            font-size: 1.4rem;
+        }
+
+        /* Map Container */
+        .map-container {
+            margin-top: 2rem;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            height: 200px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 3rem 0 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            margin-top: 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-brand .logo img {
+            height: 75px;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            font-weight: 300;
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .footer-links h4 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 300;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-socials a {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+        }
+
+        .footer-socials a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 166, 35, 0.15);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .service-card {
+                height: 320px;
+            }
+            .work-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .testimonial-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-content p {
+                margin: 0 auto 2rem;
+            }
+            .hero-actions {
+                justify-content: center;
+            }
+            .hero-stats {
+                justify-content: center;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-title {
+                font-size: 2.8rem;
+            }
+            .hero-content h1 {
+                font-size: 3.2rem;
+            }
+            .hero-visual .orb-ring {
+                width: 300px;
+                height: 300px;
+            }
+            .hero-visual .orb-ring .inner {
+                width: 180px;
+                height: 180px;
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 1rem 0;
+                gap: 1rem;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .service-card {
+                height: 260px;
+            }
+            .work-grid {
+                grid-template-columns: 1fr;
+            }
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .footer-brand p {
+                margin: 0 auto;
+            }
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            .section-title {
+                font-size: 2.2rem;
+            }
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .container {
+                padding: 0 1.2rem;
+            }
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                font-size: 1.6rem;
+                bottom: 20px;
+                right: 20px;
+            }
+            .hero-visual .orb-ring {
+                width: 220px;
+                height: 220px;
+            }
+            .hero-visual .orb-ring .inner {
+                width: 140px;
+                height: 140px;
+                font-size: 2.8rem;
+            }
+            .floating-badge {
+                font-size: 0.65rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        /* ===== UTILITY ===== */
+        .text-accent {
+            color: var(--accent);
+        }
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+        .gap-1 {
+            gap: 1rem;
+        }
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        #toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(30px);
+            background: #1a2035;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            border: 1px solid rgba(255,255,255,0.08);
+            white-space: nowrap;
+        }
+        #toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        #toast.success { border-color: rgba(52,211,153,0.4); }
+        #toast.error   { border-color: rgba(248,113,113,0.4); }
+        #toast i { font-size: 1.1rem; }
+        #toast.success i { color: #34d399; }
+        #toast.error   i { color: #f87171; }
+
+        /* Submit button loading state */
+        #submitBtn.loading {
+            opacity: 0.7;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== TOAST NOTIFICATION ===== -->
+    <div id="toast"><i class="fas fa-check-circle"></i><span></span></div>
+
+    <!-- ===== ANIMATED BACKGROUND ===== -->
+    <div class="bg-orbs">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- ===== WHATSAPP FLOATING BUTTON ===== -->
+    <a href="https://wa.me/919892939320?text=Hi%20Laser%20Point!%20I%20want%20to%20place%20an%20order." class="whatsapp-float" target="_blank" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav id="navbar">
+        <div class="container nav-flex">
+            <a href="#home" class="logo" aria-label="Laser Point Home">
+                <img src="./logo.png" id="navLogo" alt="Laser Point Logo" />
+            </a>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#work">Work</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO WITH FACTORY BACKGROUND ===== -->
+    <section id="home">
+        <div class="hero-bg">
+            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1600&q=80" alt="Printing factory interior" loading="lazy" />
+            <div class="gradient-overlay"></div>
+        </div>
+        <div class="container hero-grid">
+            <div class="hero-content" data-aos="fade-right" data-aos-duration="1000">
+                <span class="section-badge"><i class="fas fa-print"></i> Precision Printing</span>
+                <h1>Where <span class="highlight">Light</span> Meets <span class="highlight">Precision</span></h1>
+                <p>UV printing · DTF stickers · Laser marking & engraving — all under one roof. In-house machines for unmatched quality & speed.</p>
+                <div class="hero-actions">
+                    <a href="#contact" class="btn-primary"><i class="fas fa-paper-plane"></i> Start Your Order</a>
+                    <a href="#work" class="btn-outline"><i class="fas fa-play-circle"></i> View Our Work</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <h3>500+</h3>
+                        <p>Projects Delivered</p>
+                    </div>
+                    <div class="stat">
+                        <h3>98%</h3>
+                        <p>Client Satisfaction</p>
+                    </div>
+                    <div class="stat">
+                        <h3>4.9★</h3>
+                        <p>Average Rating</p>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual" data-aos="fade-left" data-aos-duration="1000">
+                <div class="orb-ring">
+                    <div class="inner">
+                        <i class="fas fa-laser"></i>
+                    </div>
+                </div>
+                <div class="floating-badge" style="top:5%; right:-5%;">
+                    <i class="fas fa-check-circle"></i> UV DTF Ready
+                </div>
+                <div class="floating-badge" style="bottom:10%; left:-8%;">
+                    <i class="fas fa-check-circle"></i> Laser Engraving
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section id="about">
+        <div class="container">
+            <div class="section-centered" data-aos="fade-up">
+                <span class="section-badge">About Us</span>
+                <h2 class="section-title">Crafted with <span class="highlight">Precision</span> &amp; Passion</h2>
+                <p class="section-subtitle" style="max-width: 700px; margin: 0 auto 2.5rem;">
+                    Laser Point is a dedicated printing house equipped with state-of-the-art UV flatbed, UV DTF, laser marking, and engraving machines. We transform ideas into tangible, high-precision prints.
+                </p>
+            </div>
+            <div class="flex-wrap" style="justify-content: center; gap: 2rem;" data-aos="fade-up" data-aos-delay="200">
+                <div style="display:flex; align-items:center; gap:0.6rem;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> In-house machines</div>
+                <div style="display:flex; align-items:center; gap:0.6rem;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> UV & DTF experts</div>
+                <div style="display:flex; align-items:center; gap:0.6rem;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> Laser marking & engraving</div>
+                <div style="display:flex; align-items:center; gap:0.6rem;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> Same-day service available</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section id="services">
+        <div class="container">
+            <div class="section-centered" data-aos="fade-up">
+                <span class="section-badge">What We Do</span>
+                <h2 class="section-title">Our <span class="highlight">Services</span></h2>
+                <p class="section-subtitle">In-house printing technologies for every need.</p>
+            </div>
+            <div class="services-grid">
+
+                <!-- UV Flatbed Printing Machine -->
+                <div class="service-card" data-aos="fade-up" data-aos-delay="0">
+                    <img class="sc-bg" src="uv-printing.png" alt="UV Flatbed Printing Machine" loading="lazy" />
+                    <span class="sc-tag"><i class="fas fa-sun"></i> &nbsp;UV Flatbed</span>
+                    <div class="sc-content">
+                        <h3>UV Printing</h3>
+                        <p>Flatbed UV on wood, glass, metal &amp; more. Vibrant, durable results.</p>
+                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Learn More</span>
+                    </div>
+                </div>
+
+                <!-- UV DTF Sticker Printing Machine -->
+                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                    <img class="sc-bg" src="dtf-stickers.png" alt="UV DTF Sticker Printing Machine" loading="lazy" />
+                    <span class="sc-tag"><i class="fas fa-sticky-note"></i> &nbsp;DTF</span>
+                    <div class="sc-content">
+                        <h3>UV DTF Stickers</h3>
+                        <p>High-quality A3 &amp; A4 sheets, plus meter-based rolls. Custom sizes available.</p>
+                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Learn More</span>
+                    </div>
+                </div>
+
+                <!-- MDF Cutting Machine -->
+                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                    <img class="sc-bg" src="mdf-cutting.png" alt="MDF Cutting Machine" loading="lazy" />
+                    <span class="sc-tag"><i class="fas fa-cut"></i> &nbsp;MDF Cutting</span>
+                    <div class="sc-content">
+                        <h3>MDF Cutting</h3>
+                        <p>Precision CNC cutting on MDF, acrylic, wood &amp; composites for any shape.</p>
+                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Learn More</span>
+                    </div>
+                </div>
+
+                <!-- Laser Engraving Machine -->
+                <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                    <img class="sc-bg" src="laser-engraving.png" alt="Laser Engraving Machine" loading="lazy" />
+                    <span class="sc-tag"><i class="fas fa-bolt"></i> &nbsp;Laser</span>
+                    <div class="sc-content">
+                        <h3>Laser Engraving</h3>
+                        <p>Precision engraving for gifts, industrial parts, and custom projects.</p>
+                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Learn More</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WORK ===== -->
+    <section id="work" style="background: var(--secondary);">
+        <div class="container">
+            <div class="section-centered" data-aos="fade-up">
+                <span class="section-badge">Portfolio</span>
+                <h2 class="section-title">Our <span class="highlight">Work</span></h2>
+                <p class="section-subtitle">A glimpse into our precision craftsmanship.</p>
+            </div>
+            <div class="work-grid">
+                <!-- UV Print on Acrylic: vivid UV flatbed print on clear acrylic/glass -->
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="0">
+                    <img src="UV Print on Acrylic.png" alt="UV Print on Acrylic" loading="lazy" />
+                    <div class="overlay"><h4>UV Print on Acrylic</h4><p>Vibrant, durable finish</p></div>
+                </div>
+                <!-- DTF Sticker Sheets: colorful sticker/decal sheet printing -->
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="DTF Sticker Sheets.png" alt="DTF Sticker Sheets" loading="lazy" />
+                    <div class="overlay"><h4>DTF Sticker Sheets</h4><p>A3 &amp; A4 format, full color</p></div>
+                </div>
+                <!-- Laser Marking: laser beam marking on metal surface -->
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="Laser Marking.png" alt="Laser Marking" loading="lazy" />
+                    <div class="overlay"><h4>Laser Marking</h4><p>Metal &amp; plastic parts</p></div>
+                </div>
+                <!-- Engraved Gifts: laser engraved wooden/personalized gift items -->
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="Engraved Gifts.png" alt="Engraved Gifts" loading="lazy" />
+                    <div class="overlay"><h4>Engraved Gifts</h4><p>Personalized &amp; elegant</p></div>
+                </div>
+                <!-- Custom Prototypes: UV printing on custom product prototypes -->
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="400">
+                    <img src="Custom Prototypes.png" alt="Custom Prototypes" loading="lazy" />
+                    <div class="overlay"><h4>Custom Prototypes</h4><p>Rapid UV printing</p></div>
+                </div>
+                <!-- Promotional Items: branded merchandise, pens, mugs, printed items -->
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="500">
+                    <img src="Promotional Items.png" alt="Promotional Items" loading="lazy" />
+                    <div class="overlay"><h4>Promotional Items</h4><p>Branded merchandise</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section id="testimonials">
+        <div class="container">
+            <div class="section-centered" data-aos="fade-up">
+                <span class="section-badge">Testimonials</span>
+                <h2 class="section-title">What Our <span class="highlight">Clients</span> Say</h2>
+                <p class="section-subtitle">Real feedback from real projects.</p>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>"Laser Point delivered A3 UV DTF stickers with impeccable quality. Fast turnaround and great communication."</blockquote>
+                    <div class="author">
+                        <div class="avatar">PM</div>
+                        <div><div class="name">Priya M.</div><div class="role">Creative Director</div></div>
+                    </div>
+                </div>
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>"Their laser engraving on metal is second to none. Highly recommend for industrial marking."</blockquote>
+                    <div class="author">
+                        <div class="avatar">RK</div>
+                        <div><div class="name">Rohan K.</div><div class="role">Production Manager</div></div>
+                    </div>
+                </div>
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>"Great team, they helped us with UV printing on acrylic. Stunning results every time."</blockquote>
+                    <div class="author">
+                        <div class="avatar">AS</div>
+                        <div><div class="name">Ananya S.</div><div class="role">Brand Owner</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section id="contact" style="background: var(--secondary);">
+        <div class="container">
+            <div class="section-centered" data-aos="fade-up">
+                <span class="section-badge">Get in Touch</span>
+                <h2 class="section-title">Let's <span class="highlight">Create</span> Together</h2>
+                <p class="section-subtitle">Have a project in mind? Reach out or place your order directly.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info" data-aos="fade-right">
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-map-pin"></i></div>
+                        <div><h4>Visit Us</h4><p>42 Laser Street, Industrial Area, Delhi</p></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-phone-alt"></i></div>
+                        <div><h4>Call Us</h4><p>+91 98929 39320</p></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-envelope"></i></div>
+                        <div><h4>Email Us</h4><p>order.laserpoint@gmail.com</p></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-clock"></i></div>
+                        <div><h4>Working Hours</h4><p>Mon–Sat: 9:00 AM – 7:00 PM</p></div>
+                    </div>
+
+                    <!-- Google Map -->
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3500.0000000000005!2d77.000000!3d28.500000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDMwJzAwLjAiTiA3N8KwMDAnMDAuMCJF!5e0!3m2!1sen!2sin!4v1234567890" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                    <div style="margin-top: 2rem; display:flex; gap: 1rem;">
+                        <a href="#" style="color:var(--text-secondary); font-size:1.3rem; transition:color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color:var(--text-secondary); font-size:1.3rem; transition:color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color:var(--text-secondary); font-size:1.3rem; transition:color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fab fa-youtube"></i></a>
+                        <a href="#" style="color:var(--text-secondary); font-size:1.3rem; transition:color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+
+                <!-- ===== ORDER FORM ===== -->
+                <div class="form-container" data-aos="fade-left">
+                    <h3><i class="fas fa-file-pdf" style="color:var(--accent);"></i> Order UV DTF Stickers</h3>
+                    <p class="form-sub">Choose your size & upload your design. We'll quote & confirm.</p>
+                    <form id="orderForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" placeholder="Your full name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="emailAddress">Email Address</label>
+                            <input type="email" id="emailAddress" placeholder="you@example.com" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="orderType">Order Type</label>
+                            <select id="orderType" required>
+                                <option value="a4">A4 Sheet</option>
+                                <option value="a3">A3 Sheet</option>
+                                <option value="meter">Meter-based (roll)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="quantityGroup">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity" min="1" value="1" required />
+                            <small style="color: var(--text-secondary); font-size: 0.75rem;" id="quantityUnit">sheets</small>
+                        </div>
+
+                        <!-- Price Display -->
+                        <div class="price-display" id="priceDisplay">
+                            <span>Estimated Price:</span>
+                            <span class="amount" id="priceAmount">₹0</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fileUpload">Upload Design (PDF/AI/PNG)</label>
+                            <div class="file-input-wrap">
+                                <input type="file" id="fileUpload" accept=".pdf,.ai,.png,.jpg,.jpeg" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Additional Notes</label>
+                            <textarea id="notes" placeholder="Any special instructions..."></textarea>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn-primary" style="width:100%; justify-content:center; display:flex; align-items:center; gap:0.5rem;">
+                            <i class="fas fa-paper-plane"></i> Send Order Request
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#home" class="logo" aria-label="Laser Point Home"><img src="./logo.png" id="footerLogo" alt="Laser Point Logo" /></a>
+                    <p>Precision printing &amp; engraving solutions. Crafted with light, built to last.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#services">Services</a>
+                    <a href="#work">Work</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <a href="#services">UV Printing</a>
+                    <a href="#services">UV DTF Stickers</a>
+                    <a href="#services">Laser Marking</a>
+                    <a href="#services">Engraving</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Connect</h4>
+                    <a href="#contact">Contact</a>
+                    <a href="#testimonials">Testimonials</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Laser Point — Precision Printing &amp; Engraving. All rights reserved.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // AOS
+        AOS.init({
+            once: true,
+            offset: 60,
+            duration: 800,
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > 30) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const icon = themeToggle.querySelector('i');
+        let isDark = true;
+
+        themeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+        });
+
+        // Hamburger
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // Pricing calculator
+        const orderType = document.getElementById('orderType');
+        const quantityInput = document.getElementById('quantity');
+        const priceAmount = document.getElementById('priceAmount');
+        const quantityUnit = document.getElementById('quantityUnit');
+
+        const pricing = {
+            a4: { rate: 50, unit: 'sheets' },
+            a3: { rate: 100, unit: 'sheets' },
+            meter: { rate: 450, unit: 'meters' }
+        };
+
+        function updatePrice() {
+            const type = orderType.value;
+            const qty = parseInt(quantityInput.value) || 0;
+            const rate = pricing[type].rate;
+            const total = qty * rate;
+            priceAmount.textContent = `₹${total}`;
+            quantityUnit.textContent = pricing[type].unit;
+        }
+
+        orderType.addEventListener('change', updatePrice);
+        quantityInput.addEventListener('input', updatePrice);
+        updatePrice();
+
+        // ── Toast helper ────────────────────────────────────────────────────
+        const toast = document.getElementById('toast');
+        let toastTimer;
+        function showToast(msg, type = 'success') {
+            toast.className = 'show ' + type;
+            toast.querySelector('i').className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            toast.querySelector('span').textContent = msg;
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => { toast.className = ''; }, 5000);
+        }
+
+        // ── Form handler (fetch → /send-order) ─────────────────────────────
+        const form       = document.getElementById('orderForm');
+        const submitBtn  = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name  = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('emailAddress').value.trim();
+            const file  = document.getElementById('fileUpload').files[0];
+
+            if (!name || !email || !file) {
+                showToast('Please fill all fields and upload a design file.', 'error');
+                return;
+            }
+
+            // Loading state
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const formData = new FormData();
+                formData.append('fullName',     name);
+                formData.append('emailAddress', email);
+                formData.append('orderType',    orderType.value);
+                formData.append('quantity',     quantityInput.value);
+                formData.append('notes',        document.getElementById('notes').value);
+                formData.append('designFile',   file);
+
+                const res  = await fetch('/send-order', { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    form.reset();
+                    updatePrice();
+                } else {
+                    showToast(data.message || 'Something went wrong.', 'error');
+                }
+            } catch (err) {
+                showToast('Network error. Please try again.', 'error');
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Order Request';
+            }
+        });
+    </script>
+
+</body>
+</html>
