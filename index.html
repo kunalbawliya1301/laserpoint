@@ -29,14 +29,16 @@
     <style>
         /* ===== CSS VARIABLES ===== */
         :root {
-            --primary: #0a0f1f;
-            --secondary: #141b2d;
+            --primary: #080c18;
+            --secondary: #0f1626;
             --accent: #f5a623;
             --accent-light: #f7c35c;
+            --accent-glow: rgba(245, 166, 35, 0.25);
             --text-primary: #ffffff;
-            --text-secondary: #b0c4de;
-            --text-dark: #0a0f1f;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-secondary: #8a9dc0;
+            --text-muted: #5a6a85;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.07);
             --border-glow: rgba(245, 166, 35, 0.3);
             --shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
             --glass: rgba(255, 255, 255, 0.03);
@@ -44,17 +46,7 @@
             --font-display: 'Playfair Display', serif;
             --font-body: 'Inter', sans-serif;
             --whatsapp: #25D366;
-        }
-
-        /* Light theme */
-        [data-theme="light"] {
-            --primary: #f4f6fa;
-            --secondary: #e8ecf2;
-            --text-primary: #0a0f1f;
-            --text-secondary: #2d3748;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --glass: rgba(255, 255, 255, 0.6);
-            --shadow: 0 25px 60px rgba(0, 0, 0, 0.1);
+            --navbar-h: 78px; /* overridden dynamically by JS */
         }
 
         /* ===== RESET & BASE ===== */
@@ -62,6 +54,12 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
         }
 
         html {
@@ -74,7 +72,6 @@
             color: var(--text-primary);
             line-height: 1.7;
             transition: background 0.5s ease, color 0.5s ease;
-            overflow-x: hidden;
         }
 
         ::selection {
@@ -117,27 +114,6 @@
             animation-duration: 25s;
         }
 
-        .orb:nth-child(2) {
-            width: 400px;
-            height: 400px;
-            background: #7b61ff;
-            bottom: -10%;
-            right: -5%;
-            animation-duration: 30s;
-            animation-delay: 5s;
-        }
-
-        .orb:nth-child(3) {
-            width: 300px;
-            height: 300px;
-            background: #00d4ff;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-duration: 35s;
-            animation-delay: 10s;
-        }
-
         @keyframes floatOrb {
             0% {
                 transform: translate(0, 0) scale(1);
@@ -161,19 +137,15 @@
             width: 100%;
             z-index: 1000;
             padding: 0.8rem 0;
-            background: rgba(10, 15, 31, 0.75);
-            backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(8, 12, 24, 0.80);
+            backdrop-filter: blur(24px) saturate(180%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             transition: all 0.4s ease;
         }
 
-        [data-theme="light"] nav {
-            background: rgba(244, 246, 250, 0.85);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        }
-
         nav.scrolled {
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(8, 12, 24, 0.95);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         }
 
         .nav-flex {
@@ -195,10 +167,6 @@
             width: auto;
             object-fit: contain;
             mix-blend-mode: lighten;
-        }
-
-        [data-theme="light"] .logo img {
-            mix-blend-mode: multiply;
         }
 
         .footer-brand .logo img {
@@ -247,28 +215,6 @@
             gap: 1.2rem;
         }
 
-        .theme-toggle {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: color 0.3s ease, transform 0.3s ease;
-            padding: 0.4rem;
-            border-radius: 50%;
-            background: var(--card-bg);
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .theme-toggle:hover {
-            color: var(--accent);
-            transform: rotate(30deg);
-        }
-
         .hamburger {
             display: none;
             flex-direction: column;
@@ -287,6 +233,22 @@
             transition: all 0.3s ease;
         }
 
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7.5px) rotate(45deg);
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7.5px) rotate(-45deg);
+        }
+
+        .mobile-quote-item {
+            display: none;
+        }
+
         /* ===== WHATSAPP FLOATING BUTTON ===== */
         .whatsapp-float {
             position: fixed;
@@ -297,32 +259,51 @@
             color: white;
             width: 60px;
             height: 60px;
-            border-radius: 50%;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15), background-color 0.3s ease;
+            text-decoration: none;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .whatsapp-float .wa-icon-container {
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .whatsapp-float i {
             font-size: 2rem;
-            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            animation: pulseWhatsApp 2s infinite;
+            display: block;
+        }
+
+        .whatsapp-float .wa-text {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: white;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            padding-right: 22px;
         }
 
         .whatsapp-float:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 40px rgba(37, 211, 102, 0.6);
+            width: 175px;
+            background: #20ba5a;
         }
 
-        @keyframes pulseWhatsApp {
-            0% {
-                box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
-            }
-            50% {
-                box-shadow: 0 8px 50px rgba(37, 211, 102, 0.7);
-            }
-            100% {
-                box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
-            }
+        .whatsapp-float:hover .wa-text {
+            opacity: 1;
+            transform: translateX(0);
+            transition-delay: 0.1s;
         }
 
         /* ===== BUTTONS ===== */
@@ -337,8 +318,8 @@
             font-size: 0.95rem;
             border: none;
             cursor: pointer;
-            transition: all 0.4s ease;
-            box-shadow: 0 8px 30px rgba(245, 166, 35, 0.35);
+            transition: all 0.35s ease;
+            box-shadow: none;
             letter-spacing: 0.3px;
             position: relative;
             overflow: hidden;
@@ -360,8 +341,8 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(245, 166, 35, 0.5);
+            opacity: 0.9;
+            box-shadow: none;
         }
 
         .btn-primary i {
@@ -385,8 +366,7 @@
         .btn-outline:hover {
             border-color: var(--accent);
             color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(245, 166, 35, 0.15);
+            background: rgba(245, 166, 35, 0.05);
         }
 
         /* ===== SECTION STYLES ===== */
@@ -438,12 +418,93 @@
             margin: 0 auto 2.5rem;
         }
 
-        /* ===== HERO WITH FACTORY IMAGE ===== */
-        #home {
-            min-height: 100vh;
+        /* ===== ABOUT STRUCTURE REDESIGN ===== */
+        .about-features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .about-feature-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 0.8rem;
+            padding: 2.2rem 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+        }
+
+        .about-feature-card .feature-icon {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 0.4rem;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            border: 1px solid rgba(245, 166, 35, 0.15);
             display: flex;
             align-items: center;
-            padding-top: 6rem;
+            justify-content: center;
+            background: rgba(245, 166, 35, 0.03);
+        }
+
+        .about-feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+
+        .about-feature-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* Responsive styling for About Us */
+        @media (max-width: 1024px) {
+            .about-features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .about-features-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            .about-feature-card {
+                padding: 1.2rem 0.8rem !important;
+                gap: 0.5rem !important;
+                border-radius: 12px !important;
+            }
+            .about-feature-card .feature-icon {
+                width: 42px !important;
+                height: 42px !important;
+                font-size: 1.3rem !important;
+                margin-bottom: 0.2rem !important;
+            }
+            .about-feature-card h3 {
+                font-size: 0.95rem !important;
+                line-height: 1.2 !important;
+            }
+            .about-feature-card p {
+                font-size: 0.72rem !important;
+                line-height: 1.4 !important;
+            }
+        }
+        /* ===== HERO WITH FACTORY IMAGE ===== */
+        #home {
+            height: calc(100vh - var(--navbar-h));
+            margin-top: var(--navbar-h);
+            display: flex;
+            align-items: center;
             position: relative;
             background: var(--primary);
         }
@@ -500,16 +561,21 @@
             margin-bottom: 1.5rem;
         }
 
+        .hero-br {
+            display: none;
+        }
+
         .hero-content h1 .highlight {
             color: var(--accent);
             font-style: italic;
         }
 
         .hero-content p {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: var(--text-secondary);
-            max-width: 480px;
+            max-width: 460px;
             font-weight: 300;
+            line-height: 1.6;
             margin-bottom: 2rem;
         }
 
@@ -521,20 +587,43 @@
 
         .hero-stats {
             display: flex;
-            gap: 3rem;
+            gap: 0;
             margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            width: 100%;
+        }
+
+        .hero-stats .stat {
+            flex: 1;
+            padding-right: 1.5rem;
+            text-align: left;
+        }
+
+        .hero-stats .stat + .stat {
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .hero-stats .stat + .stat::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 30%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.12);
         }
 
         .hero-stats .stat h3 {
-            font-size: 2.2rem;
-            font-weight: 800;
+            font-size: 1.8rem;
+            font-weight: 700;
             color: var(--accent);
+            line-height: 1.2;
+            margin-bottom: 0.15rem;
         }
 
         .hero-stats .stat p {
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             color: var(--text-secondary);
             font-weight: 400;
         }
@@ -683,28 +772,10 @@
             );
         }
 
-        /* Gold top accent bar */
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-light), transparent);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: 3;
-        }
-
-        .service-card:hover::before {
-            opacity: 1;
-        }
-
         .service-card:hover {
             transform: translateY(-8px);
-            border-color: rgba(245, 166, 35, 0.35);
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(245, 166, 35, 0.15);
+            border-color: rgba(245, 166, 35, 0.45);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
         }
 
         /* Content sits above overlay */
@@ -793,18 +864,31 @@
         .work-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            grid-auto-rows: 280px;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
         }
 
         .work-item {
             position: relative;
-            border-radius: 20px;
+            border-radius: 16px;
             overflow: hidden;
-            aspect-ratio: 1/1;
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.04);
             transition: all 0.5s ease;
             cursor: pointer;
+        }
+
+        .work-item.bento-w2 {
+            grid-column: span 2;
+        }
+
+        .work-item.bento-h2 {
+            grid-row: span 2;
         }
 
         .work-item img {
@@ -815,12 +899,38 @@
         }
 
         .work-item:hover img {
-            transform: scale(1.08);
+            transform: scale(1.05);
         }
 
         .work-item:hover {
-            border-color: var(--accent);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(245, 166, 35, 0.4);
+            box-shadow: 0 0 15px rgba(245, 166, 35, 0.15);
+        }
+
+        @media (max-width: 900px) {
+            .work-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 250px;
+            }
+            .work-item.bento-w2 {
+                grid-column: span 2;
+            }
+            .work-item.bento-h2 {
+                grid-row: span 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .work-grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: 220px;
+            }
+            .work-item.bento-w2 {
+                grid-column: span 1;
+            }
+            .work-item.bento-h2 {
+                grid-row: span 1;
+            }
         }
 
         .work-item .overlay {
@@ -848,68 +958,133 @@
             color: var(--text-secondary);
         }
 
-        /* ===== TESTIMONIALS ===== */
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+        /* ===== TESTIMONIAL TICKER LOOP ===== */
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            padding: 3rem 0;
+            position: relative;
+            background: transparent;
+        }
+
+        /* Ticker container */
+
+        .ticker-track {
+            display: flex;
+            width: max-content;
+            gap: 2rem;
+            animation: tickerScroll 24s linear infinite;
+        }
+
+        .ticker-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes tickerScroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
         }
 
         .testimonial-card {
+            position: relative;
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            transition: all 0.4s ease;
+            padding: 3.8rem 2rem 2.2rem;
+            width: 320px;
+            flex-shrink: 0;
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            transition: border-color 0.3s ease;
         }
 
         .testimonial-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(245, 166, 35, 0.15);
+            border-color: rgba(245, 166, 35, 0.25);
+        }
+
+        .testimonial-card .avatar-wrap {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 5px solid #0a0f1f; /* match page bg */
+            background: #111827;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+        }
+
+        .testimonial-card .avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .testimonial-card .stars {
+            width: 100%;
+            display: flex;
+            justify-content: center;
             color: var(--accent);
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+            gap: 0.2rem;
+        }
+
+        .testimonial-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.6rem;
+            text-align: left;
+            width: 100%;
         }
 
         .testimonial-card blockquote {
-            font-style: italic;
-            font-weight: 300;
+            font-size: 0.88rem;
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.6;
+            margin: 0 0 1.5rem 0;
+            border: none;
+            padding: 0;
+            font-style: normal;
         }
 
         .testimonial-card .author {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .testimonial-card .author .avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: #0a0f1f;
+            margin-top: auto;
+            text-align: left;
         }
 
         .testimonial-card .author .name {
             font-weight: 600;
             font-size: 0.9rem;
+            color: #ffffff;
         }
 
         .testimonial-card .author .role {
             font-size: 0.75rem;
             color: var(--text-secondary);
+        }
+
+        .testimonial-card .quote-icon {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 1.2rem;
+            font-size: 5rem;
+            color: var(--accent);
+            opacity: 0.22;
+            pointer-events: none;
+            line-height: 1;
+            font-family: Georgia, serif;
         }
 
         /* ===== CONTACT / FORM ===== */
@@ -971,7 +1146,7 @@
         }
 
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-group label {
@@ -1008,36 +1183,139 @@
             min-height: 80px;
         }
 
-        .form-group .file-input-wrap {
+        /* Hidden native selects since custom select components overlay them */
+        .form-group select {
+            display: none;
+        }
+
+        /* Custom Select Component Styling */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-select-trigger {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .custom-select-wrapper.open .custom-select-trigger {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(245, 166, 35, 0.08);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .custom-select-trigger .select-arrow {
+            color: var(--accent);
+            font-size: 0.85rem;
+            transition: transform 0.3s ease;
+        }
+
+        .custom-select-wrapper.open .select-arrow {
+            transform: rotate(180deg);
+        }
+
+        .custom-select-options {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(-8px);
+            pointer-events: none;
+            transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+        }
+
+        .custom-select-wrapper.open .custom-select-options {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .custom-option {
+            padding: 0.85rem 1.2rem;
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-body);
+            user-select: none;
+        }
+
+        .custom-option:hover {
+            background: rgba(245, 166, 35, 0.1);
+            color: #ffffff;
+            padding-left: 1.5rem;
+        }
+
+        .custom-option.selected {
+            background: rgba(245, 166, 35, 0.15);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Custom premium file input layout */
+        .custom-file-upload {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 0.6rem 1.2rem;
+            padding: 0.75rem 1.2rem;
             border-radius: 12px;
-            border: 1px dashed rgba(245, 166, 35, 0.2);
+            border: 1px dashed rgba(245, 166, 35, 0.3);
             background: rgba(255, 255, 255, 0.02);
-        }
-
-        .form-group .file-input-wrap input[type="file"] {
-            border: none;
-            padding: 0.3rem 0;
-            background: transparent;
-            color: var(--text-secondary);
-        }
-
-        .form-group .file-input-wrap input[type="file"]::file-selector-button {
-            background: var(--accent);
-            border: none;
-            padding: 0.4rem 1.2rem;
-            border-radius: 60px;
-            font-weight: 600;
-            color: #0a0f1f;
             cursor: pointer;
             transition: all 0.3s ease;
+            width: 100%;
         }
 
-        .form-group .file-input-wrap input[type="file"]::file-selector-button:hover {
-            transform: scale(1.05);
+        .custom-file-upload:hover {
+            border-color: var(--accent);
+            background: rgba(245, 166, 35, 0.04);
+        }
+
+        .custom-file-upload .file-btn {
+            background: var(--accent);
+            color: #0a0f1f;
+            padding: 0.5rem 1.4rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .custom-file-upload:hover .file-btn {
+            background: var(--accent-light);
+            transform: translateY(-1px);
+        }
+
+        .custom-file-upload .file-name {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .price-display {
@@ -1046,6 +1324,7 @@
             border-radius: 12px;
             border: 1px solid rgba(245, 166, 35, 0.15);
             margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1077,7 +1356,6 @@
             position: relative;
             z-index: 1;
             padding: 3rem 0 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
             margin-top: 2rem;
         }
 
@@ -1146,6 +1424,7 @@
         .footer-socials a {
             color: var(--text-secondary);
             font-size: 1.2rem;
+            text-decoration: none;
             transition: all 0.3s ease;
             width: 40px;
             height: 40px;
@@ -1179,12 +1458,29 @@
             .footer-grid {
                 grid-template-columns: 1fr 1fr;
             }
+            .hero-grid {
+                gap: 2.5rem;
+            }
+            .hero-content h1 {
+                font-size: 3.6rem;
+            }
         }
 
         @media (max-width: 820px) {
+            #home {
+                height: calc(100vh - var(--navbar-h)) !important;
+                min-height: 480px !important;
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
+                margin-top: var(--navbar-h) !important;
+            }
             .hero-grid {
                 grid-template-columns: 1fr;
                 text-align: center;
+                gap: 1.5rem;
+            }
+            .hero-content {
+                align-items: center;
             }
             .hero-content p {
                 margin: 0 auto 2rem;
@@ -1195,92 +1491,348 @@
             .hero-stats {
                 justify-content: center;
             }
+            .hero-visual {
+                width: 100%;
+                max-width: 400px;
+                min-height: 300px;
+                margin: 0 auto;
+                height: 340px;
+            }
             .contact-grid {
                 grid-template-columns: 1fr;
             }
             .section-title {
-                font-size: 2.8rem;
+                font-size: 2.0rem;
             }
             .hero-content h1 {
-                font-size: 3.2rem;
-            }
-            .hero-visual .orb-ring {
-                width: 300px;
-                height: 300px;
-            }
-            .hero-visual .orb-ring .inner {
-                width: 180px;
-                height: 180px;
-                font-size: 3.5rem;
+                font-size: 3rem;
             }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .nav-links {
                 display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #080c18 !important;
+                backdrop-filter: none !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
                 flex-direction: column;
+                padding: 1.5rem 0;
+                gap: 1.2rem;
                 width: 100%;
-                padding: 1rem 0;
-                gap: 1rem;
+                z-index: 999;
+                text-align: center;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
             }
             .nav-links.open {
                 display: flex;
             }
+            /* Hide the quote CTA button in the main desktop navbar */
+            .nav-actions .btn-primary {
+                display: none !important;
+            }
+            .mobile-quote-item {
+                display: block;
+                width: 100%;
+                padding: 0.5rem 1.5rem 0;
+            }
+            .mobile-quote-btn {
+                display: block;
+                width: 100%;
+                text-align: center;
+                padding: 0.75rem 1.5rem;
+                font-weight: 600;
+                border-radius: 50px;
+                background: var(--accent);
+                color: #0a0f1f !important;
+                transition: all 0.3s ease;
+            }
+            .mobile-quote-btn:hover {
+                background: var(--accent-light);
+            }
+            /* Reduce navbar padding and logo/hamburger dimensions on mobile */
+            nav {
+                padding: 0.55rem 0 !important;
+            }
+            .logo img {
+                height: 42px !important;
+            }
             .hamburger {
-                display: flex;
+                display: flex !important;
+                gap: 4px !important;
+                padding: 0.3rem !important;
+            }
+            .hamburger span {
+                width: 22px !important;
+                height: 2px !important;
+            }
+            .hamburger.open span:nth-child(1) {
+                transform: translateY(6px) rotate(45deg);
+            }
+            .hamburger.open span:nth-child(2) {
+                opacity: 0;
+            }
+            .hamburger.open span:nth-child(3) {
+                transform: translateY(-6px) rotate(-45deg);
             }
             .services-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
             }
             .service-card {
-                height: 260px;
+                height: 180px !important;
+                border-radius: 12px !important;
+            }
+            .service-card .sc-tag {
+                font-size: 0.65rem !important;
+                padding: 0.3rem 0.6rem !important;
+                top: 8px !important;
+                left: 8px !important;
+            }
+            .service-card .sc-content {
+                padding: 0.8rem !important;
+            }
+            .service-card .sc-content h3 {
+                font-size: 0.95rem !important;
+                margin-bottom: 0.2rem !important;
+            }
+            .service-card .sc-content p {
+                font-size: 0.72rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 0 !important;
+                opacity: 0.9 !important;
+            }
+            .service-card .sc-content .sc-arrow {
+                display: none !important;
             }
             .work-grid {
                 grid-template-columns: 1fr;
+                grid-auto-rows: 240px;
+                gap: 8px;
+                padding: 8px;
+                border-radius: 20px;
+            }
+            .work-item.bento-w2 {
+                grid-column: span 1;
+            }
+            .work-item.bento-h2 {
+                grid-row: span 1;
             }
             .testimonial-grid {
                 grid-template-columns: 1fr;
             }
             .footer-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1.8rem 1rem !important;
+                text-align: left !important;
+            }
+            .footer-brand {
+                grid-column: span 2 !important;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start !important;
+                text-align: left !important;
+                margin-bottom: 0.5rem !important;
+            }
+            .footer-brand .logo {
+                justify-content: flex-start !important;
+            }
+            .footer-brand .logo img {
+                height: 90px !important;
             }
             .footer-brand p {
-                margin: 0 auto;
+                margin: 0.5rem 0 0 !important;
+                max-width: 100% !important;
+            }
+            .footer-links {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+            .footer-grid > div:nth-child(4) {
+                grid-column: span 1 !important;
+                align-items: flex-start !important;
+                text-align: left !important;
+            }
+            .footer-grid > div:nth-child(4) a {
+                text-align: left !important;
+            }
+            .footer-bottom {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                text-align: left !important;
+                gap: 1.2rem !important;
+            }
+            .footer-bottom p {
+                text-align: left !important;
+            }
+            .footer-socials {
+                justify-content: flex-start !important;
             }
             .hero-stats {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: center;
+                flex-direction: row;
+                flex-wrap: nowrap !important;
+                gap: 0 !important;
+                margin-top: 3.2rem !important;
+                width: 100%;
+            }
+            .hero-stats .stat {
+                padding-right: 0.6rem !important;
+                padding-left: 0.6rem !important;
+                flex: 1;
+            }
+            .hero-stats .stat h3 {
+                font-size: 1.35rem !important;
+            }
+            .hero-stats .stat p {
+                font-size: 0.65rem !important;
+                white-space: nowrap;
+            }
+            .hero-stats .stat + .stat::before {
+                height: 45px !important;
+                top: 25% !important;
+            }
+            .hero-br {
+                display: block !important;
             }
             .section-title {
-                font-size: 2.2rem;
+                font-size: 1.65rem !important;
+            }
+            .section-subtitle {
+                font-size: 0.88rem !important;
+                margin-bottom: 2rem !important;
+                line-height: 1.55 !important;
+            }
+            section {
+                padding: 3.5rem 0 !important;
             }
             .hero-content h1 {
-                font-size: 2.5rem;
+                font-size: 2.1rem !important;
+            }
+            .hero-content p {
+                font-size: 0.9rem;
+                margin-bottom: 1.5rem !important;
+            }
+            .hero-actions {
+                flex-wrap: nowrap !important;
+                gap: 0.5rem !important;
+                width: 100%;
+                justify-content: center;
+            }
+            .hero-actions .btn-primary,
+            .hero-actions .btn-outline {
+                padding: 0.65rem 0.8rem !important;
+                font-size: 0.78rem !important;
+                flex: 1 !important;
+                text-align: center;
+                white-space: nowrap;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 0;
             }
             .container {
                 padding: 0 1.2rem;
             }
             .whatsapp-float {
-                width: 50px;
+                width: 50px !important;
                 height: 50px;
-                font-size: 1.6rem;
                 bottom: 20px;
                 right: 20px;
+                padding: 0 !important;
             }
-            .hero-visual .orb-ring {
-                width: 220px;
-                height: 220px;
+            .whatsapp-float .wa-icon-container {
+                width: 50px;
+                height: 50px;
             }
-            .hero-visual .orb-ring .inner {
-                width: 140px;
-                height: 140px;
-                font-size: 2.8rem;
+            .whatsapp-float i {
+                font-size: 1.6rem;
             }
+            .whatsapp-float .wa-text {
+                display: none !important;
+            }
+            .whatsapp-float:hover {
+                width: 50px !important;
+            }
+            /* Reset hero floating badges inward to prevent viewport overflow */
             .floating-badge {
-                font-size: 0.65rem;
-                padding: 0.4rem 0.8rem;
+                right: 5px !important;
+                left: auto !important;
+                top: 5% !important;
+            }
+            .hero-visual div.floating-badge:nth-of-type(2) {
+                left: 5px !important;
+                right: auto !important;
+                bottom: 10% !important;
+            }
+            .hero-visual {
+                display: none !important;
+            }
+            .hv-top-chip-wrap { display: none; }
+            .hv-chip { font-size: 0.68rem; padding: 0.5rem 0.8rem; }
+            .contact-socials {
+                display: none !important;
+            }
+            .form-container {
+                padding: 1.25rem !important;
+                border-radius: 16px !important;
+            }
+            .form-container h3 {
+                font-size: 1.35rem !important;
+            }
+            .form-container .form-sub {
+                font-size: 0.8rem !important;
+                margin-bottom: 1.2rem !important;
+            }
+            .form-group {
+                margin-bottom: 1rem !important;
+            }
+            .form-group label {
+                font-size: 0.78rem !important;
+            }
+            .form-group input,
+            .form-group textarea,
+            .custom-select-trigger {
+                padding: 0.75rem 1rem !important;
+                font-size: 0.85rem !important;
+                border-radius: 8px !important;
+            }
+            .custom-option {
+                padding: 0.75rem 1rem !important;
+                font-size: 0.85rem !important;
+            }
+            .price-display {
+                padding: 0.7rem 1rem !important;
+                font-size: 0.85rem !important;
+                border-radius: 8px !important;
+                margin-bottom: 1.2rem !important;
+            }
+            .price-display span {
+                font-size: 0.85rem !important;
+            }
+            .price-display #priceAmount {
+                font-size: 1.15rem !important;
+            }
+            .custom-file-upload {
+                padding: 0.65rem 1rem !important;
+                border-radius: 8px !important;
+            }
+            .custom-file-upload .file-btn {
+                padding: 0.4rem 1rem !important;
+                font-size: 0.75rem !important;
+            }
+            .custom-file-upload .file-name {
+                font-size: 0.78rem !important;
+            }
+            .form-container button[type="submit"],
+            .form-container .btn-primary {
+                padding: 0.8rem 1.5rem !important;
+                font-size: 0.9rem !important;
+                border-radius: 50px !important;
             }
         }
 
@@ -1352,13 +1904,14 @@
     <!-- ===== ANIMATED BACKGROUND ===== -->
     <div class="bg-orbs">
         <div class="orb"></div>
-        <div class="orb"></div>
-        <div class="orb"></div>
     </div>
 
     <!-- ===== WHATSAPP FLOATING BUTTON ===== -->
     <a href="https://wa.me/919892939320?text=Hi%20Laser%20Point!%20I%20want%20to%20place%20an%20order." class="whatsapp-float" target="_blank" aria-label="Chat on WhatsApp">
-        <i class="fab fa-whatsapp"></i>
+        <div class="wa-icon-container">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+        <span class="wa-text">Chat with Us</span>
     </a>
 
     <!-- ===== NAVBAR ===== -->
@@ -1375,19 +1928,17 @@
                 <li><a href="#work">Work</a></li>
                 <li><a href="#testimonials">Testimonials</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li class="mobile-quote-item"><a href="#contact" class="btn-primary mobile-quote-btn">Get a Quote</a></li>
             </ul>
 
             <div class="nav-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                    <i class="fas fa-moon"></i>
-                </button>
+                <a href="#contact" class="btn-primary" style="padding: 0.65rem 1.6rem; font-size: 0.85rem;">Get a Quote</a>
                 <button class="hamburger" id="hamburger" aria-label="Menu">
                     <span></span><span></span><span></span>
                 </button>
             </div>
         </div>
     </nav>
-
     <!-- ===== HERO WITH FACTORY BACKGROUND ===== -->
     <section id="home">
         <div class="hero-bg">
@@ -1397,32 +1948,30 @@
         <div class="container hero-grid">
             <div class="hero-content" data-aos="fade-right" data-aos-duration="1000">
                 <span class="section-badge"><i class="fas fa-print"></i> Precision Printing</span>
-                <h1>Where <span class="highlight">Light</span> Meets <span class="highlight">Precision</span></h1>
-                <p>UV printing · DTF stickers · Laser marking & engraving — all under one roof. In-house machines for unmatched quality & speed.</p>
+                <h1>Where <span class="highlight">Light</span> <br class="hero-br">Meets <span class="highlight">Precision</span></h1>
+                <p>UV printing, DTF stickers, and laser engraving with premium quality and fast turnaround.</p>
                 <div class="hero-actions">
                     <a href="#contact" class="btn-primary"><i class="fas fa-paper-plane"></i> Start Your Order</a>
-                    <a href="#work" class="btn-outline"><i class="fas fa-play-circle"></i> View Our Work</a>
+                    <a href="#work" class="btn-outline">View Our Work</a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat">
                         <h3>500+</h3>
-                        <p>Projects Delivered</p>
+                        <p>Projects delivered</p>
                     </div>
                     <div class="stat">
                         <h3>98%</h3>
-                        <p>Client Satisfaction</p>
+                        <p>Client satisfaction</p>
                     </div>
                     <div class="stat">
-                        <h3>4.9★</h3>
-                        <p>Average Rating</p>
+                        <h3>4.9 ★</h3>
+                        <p>Average rating</p>
                     </div>
                 </div>
             </div>
             <div class="hero-visual" data-aos="fade-left" data-aos-duration="1000">
-                <div class="orb-ring">
-                    <div class="inner">
-                        <i class="fas fa-laser"></i>
-                    </div>
+                <div class="orb-ring" style="animation: none; overflow: hidden; padding: 0; border: none; background: #0a0f1f;">
+                    <img src="./hero-showcase.jpg" alt="Laser Point Products Showcase" style="width: 100%; height: 100%; object-fit: cover;" />
                 </div>
                 <div class="floating-badge" style="top:5%; right:-5%;">
                     <i class="fas fa-check-circle"></i> UV DTF Ready
@@ -1439,16 +1988,41 @@
         <div class="container">
             <div class="section-centered" data-aos="fade-up">
                 <span class="section-badge">About Us</span>
-                <h2 class="section-title">Crafted with <span class="highlight">Precision</span> &amp; Passion</h2>
-                <p class="section-subtitle" style="max-width: 700px; margin: 0 auto 2.5rem;">
-                    Laser Point is a dedicated printing house equipped with state-of-the-art UV flatbed, UV DTF, laser marking, and engraving machines. We transform ideas into tangible, high-precision prints.
+                <h2 class="section-title">Why Choose <span class="highlight">Laser Point </span>?</h2>
+                <p class="section-subtitle" style="max-width: 800px; margin: 0 auto 3rem;">
+                    Mumbai's premier printing house equipped with state-of-the-art UV flatbed, UV DTF, and laser engraving machines. We operate entirely in-house to guarantee the highest quality craftsmanship and prompt processing.
                 </p>
             </div>
-            <div class="flex-wrap" style="justify-content: center; gap: 2rem;" data-aos="fade-up" data-aos-delay="200">
-                <div style="display:flex; align-items:center; gap:0.6rem;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> In-house machines</div>
-                <div style="display:flex; align-items:center; gap:0.6rem;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> UV & DTF experts</div>
-                <div style="display:flex; align-items:center; gap:0.6rem;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> Laser marking & engraving</div>
-                <div style="display:flex; align-items:center; gap:0.6rem;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> Same-day service available</div>
+            
+            <div class="about-features-grid" data-aos="fade-up" data-aos-delay="100">
+                <div class="about-feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>In-House Machines</h3>
+                    <p>We own and operate all our UV flatbed, UV DTF, and laser marking machinery directly under our roof.</p>
+                </div>
+                <div class="about-feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Quick Turnaround</h3>
+                    <p>Same-day and express printing options are available for local pickups and fast deliveries.</p>
+                </div>
+                <div class="about-feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3>Flexible Sizing</h3>
+                    <p>From single custom personal gifts to high-volume meter rolls and bulk sticker sheet orders.</p>
+                </div>
+                <div class="about-feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Premium Precision</h3>
+                    <p>Fine-tuned calibrations ensure razor-sharp markings and highly accurate color representation.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -1459,51 +2033,51 @@
             <div class="section-centered" data-aos="fade-up">
                 <span class="section-badge">What We Do</span>
                 <h2 class="section-title">Our <span class="highlight">Services</span></h2>
-                <p class="section-subtitle">In-house printing technologies for every need.</p>
+                <p class="section-subtitle" style="max-width: 650px; margin: 0 auto 2.5rem;">Equipped with industrial UV flatbed, UV DTF sticker rolls, and precision CNC cutting machinery.</p>
             </div>
             <div class="services-grid">
 
                 <!-- UV Flatbed Printing Machine -->
-                <div class="service-card" data-aos="fade-up" data-aos-delay="0">
+                <div class="service-card" data-service="uv-printing" data-aos="fade-up" data-aos-delay="0">
                     <img class="sc-bg" src="./uv-printing.png" alt="UV Flatbed Printing Machine" loading="lazy" />
                     <span class="sc-tag"><i class="fas fa-sun"></i> &nbsp;UV Flatbed</span>
                     <div class="sc-content">
                         <h3>UV Printing</h3>
                         <p>Flatbed UV on wood, glass, metal &amp; more. Vibrant, durable results.</p>
-                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Learn More</span>
+                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Enquire Now</span>
                     </div>
                 </div>
 
                 <!-- UV DTF Sticker Printing Machine -->
-                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-card" data-service="dtf-stickers" data-aos="fade-up" data-aos-delay="100">
                     <img class="sc-bg" src="./dtf-stickers.png" alt="UV DTF Sticker Printing Machine" loading="lazy" />
                     <span class="sc-tag"><i class="fas fa-sticky-note"></i> &nbsp;DTF</span>
                     <div class="sc-content">
                         <h3>UV DTF Stickers</h3>
                         <p>High-quality A3 &amp; A4 sheets, plus meter-based rolls. Custom sizes available.</p>
-                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Learn More</span>
+                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Enquire Now</span>
                     </div>
                 </div>
 
                 <!-- MDF Cutting Machine -->
-                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-card" data-service="mdf-cutting" data-aos="fade-up" data-aos-delay="200">
                     <img class="sc-bg" src="./mdf-cutting.png" alt="MDF Cutting Machine" loading="lazy" />
                     <span class="sc-tag"><i class="fas fa-cut"></i> &nbsp;MDF Cutting</span>
                     <div class="sc-content">
                         <h3>MDF Cutting</h3>
                         <p>Precision CNC cutting on MDF, acrylic, wood &amp; composites for any shape.</p>
-                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Learn More</span>
+                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Enquire Now</span>
                     </div>
                 </div>
 
                 <!-- Laser Engraving Machine -->
-                <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-card" data-service="laser-engraving" data-aos="fade-up" data-aos-delay="300">
                     <img class="sc-bg" src="./laser-engraving.png" alt="Laser Engraving Machine" loading="lazy" />
                     <span class="sc-tag"><i class="fas fa-bolt"></i> &nbsp;Laser</span>
                     <div class="sc-content">
                         <h3>Laser Engraving</h3>
                         <p>Precision engraving for gifts, industrial parts, and custom projects.</p>
-                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Learn More</span>
+                        <span class="sc-arrow"><i class="fas fa-arrow-right"></i> Enquire Now</span>
                     </div>
                 </div>
 
@@ -1521,12 +2095,12 @@
             </div>
             <div class="work-grid">
                 <!-- UV Print on Acrylic: vivid UV flatbed print on clear acrylic/glass -->
-                <div class="work-item" data-aos="zoom-in" data-aos-delay="0">
+                <div class="work-item bento-w2" data-aos="zoom-in" data-aos-delay="0">
                     <img src="./UV Print on Acrylic.png" alt="UV Print on Acrylic" loading="lazy" />
                     <div class="overlay"><h4>UV Print on Acrylic</h4><p>Vibrant, durable finish</p></div>
                 </div>
                 <!-- DTF Sticker Sheets: colorful sticker/decal sheet printing -->
-                <div class="work-item" data-aos="zoom-in" data-aos-delay="100">
+                <div class="work-item bento-h2" data-aos="zoom-in" data-aos-delay="100">
                     <img src="./DTF Sticker Sheets.png" alt="DTF Sticker Sheets" loading="lazy" />
                     <div class="overlay"><h4>DTF Sticker Sheets</h4><p>A3 &amp; A4 format, full color</p></div>
                 </div>
@@ -1546,7 +2120,7 @@
                     <div class="overlay"><h4>Custom Prototypes</h4><p>Rapid UV printing</p></div>
                 </div>
                 <!-- Promotional Items: branded merchandise, pens, mugs, printed items -->
-                <div class="work-item" data-aos="zoom-in" data-aos-delay="500">
+                <div class="work-item bento-w2" data-aos="zoom-in" data-aos-delay="500">
                     <img src="./Promotional Items.png" alt="Promotional Items" loading="lazy" />
                     <div class="overlay"><h4>Promotional Items</h4><p>Branded merchandise</p></div>
                 </div>
@@ -1555,37 +2129,186 @@
     </section>
 
     <!-- ===== TESTIMONIALS ===== -->
-    <section id="testimonials">
+    <section id="testimonials" style="overflow: hidden; padding-bottom: 5rem;">
         <div class="container">
             <div class="section-centered" data-aos="fade-up">
                 <span class="section-badge">Testimonials</span>
                 <h2 class="section-title">What Our <span class="highlight">Clients</span> Say</h2>
                 <p class="section-subtitle">Real feedback from real projects.</p>
             </div>
-            <div class="testimonial-grid">
-                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="0">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <blockquote>"Laser Point delivered A3 UV DTF stickers with impeccable quality. Fast turnaround and great communication."</blockquote>
-                    <div class="author">
-                        <div class="avatar">PM</div>
-                        <div><div class="name">Priya M.</div><div class="role">Creative Director</div></div>
+        </div>
+
+        <!-- Ticker Wrapper -->
+        <div class="ticker-wrap" data-aos="fade-up" data-aos-delay="100">
+            <div class="ticker-track">
+                <!-- Card 1 -->
+                <div class="testimonial-card">
+                    <div class="avatar-wrap">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&amp;q=80" alt="Priya M." />
                     </div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Stunning UV Prints!</h4>
+                    <blockquote>"Laser Point delivered our acrylic signs with impeccable speed and clarity. The colors are incredibly vibrant and durable."</blockquote>
+                    <div class="author">
+                        <div class="name">Priya M.</div>
+                        <div class="role">Creative Director</div>
+                    </div>
+                    <div class="quote-icon">”</div>
                 </div>
-                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <blockquote>"Their laser engraving on metal is second to none. Highly recommend for industrial marking."</blockquote>
-                    <div class="author">
-                        <div class="avatar">RK</div>
-                        <div><div class="name">Rohan K.</div><div class="role">Production Manager</div></div>
+
+                <!-- Card 2 -->
+                <div class="testimonial-card">
+                    <div class="avatar-wrap">
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150" alt="Rohan K." />
                     </div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Flawless Laser Etching</h4>
+                    <blockquote>"Their marking on metal components is sharp, clean, and highly permanent. Best in-house engraving service in Mumbai."</blockquote>
+                    <div class="author">
+                        <div class="name">Rohan K.</div>
+                        <div class="role">Production Manager</div>
+                    </div>
+                    <div class="quote-icon">”</div>
                 </div>
-                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <blockquote>"Great team, they helped us with UV printing on acrylic. Stunning results every time."</blockquote>
-                    <div class="author">
-                        <div class="avatar">AS</div>
-                        <div><div class="name">Ananya S.</div><div class="role">Brand Owner</div></div>
+
+                <!-- Card 3 -->
+                <div class="testimonial-card">
+                    <div class="avatar-wrap">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&amp;q=80" alt="Ananya S." />
                     </div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Perfect UV DTF Stickers</h4>
+                    <blockquote>"We ordered custom sheets and meter rolls of stickers. The varnish layer is perfectly raised, making transfers look directly printed."</blockquote>
+                    <div class="author">
+                        <div class="name">Ananya S.</div>
+                        <div class="role">Brand Owner</div>
+                    </div>
+                    <div class="quote-icon">”</div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="testimonial-card">
+                    <div class="avatar-wrap">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="Arjun M." />
+                    </div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Outstanding Quality</h4>
+                    <blockquote>"Very fast turnaround times for custom MDF cuts and promotional gifts. Their team is extremely professional and responsive."</blockquote>
+                    <div class="author">
+                        <div class="name">Arjun M.</div>
+                        <div class="role">Entrepreneur</div>
+                    </div>
+                    <div class="quote-icon">”</div>
+                </div>
+
+                <!-- DUPLICATE FOR SEAMLESS TICKER LOOP -->
+
+                <!-- Card 1 -->
+                <div class="testimonial-card">
+                    <div class="avatar-wrap">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&amp;q=80" alt="Priya M." />
+                    </div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Stunning UV Prints!</h4>
+                    <blockquote>"Laser Point delivered our acrylic signs with impeccable speed and clarity. The colors are incredibly vibrant and durable."</blockquote>
+                    <div class="author">
+                        <div class="name">Priya M.</div>
+                        <div class="role">Creative Director</div>
+                    </div>
+                    <div class="quote-icon">”</div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="testimonial-card">
+                    <div class="avatar-wrap">
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150" alt="Rohan K." />
+                    </div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Flawless Laser Etching</h4>
+                    <blockquote>"Their marking on metal components is sharp, clean, and highly permanent. Best in-house engraving service in Mumbai."</blockquote>
+                    <div class="author">
+                        <div class="name">Rohan K.</div>
+                        <div class="role">Production Manager</div>
+                    </div>
+                    <div class="quote-icon">”</div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="testimonial-card">
+                    <div class="avatar-wrap">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&amp;q=80" alt="Ananya S." />
+                    </div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Perfect UV DTF Stickers</h4>
+                    <blockquote>"We ordered custom sheets and meter rolls of stickers. The varnish layer is perfectly raised, making transfers look directly printed."</blockquote>
+                    <div class="author">
+                        <div class="name">Ananya S.</div>
+                        <div class="role">Brand Owner</div>
+                    </div>
+                    <div class="quote-icon">”</div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="testimonial-card">
+                    <div class="avatar-wrap">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="Arjun M." />
+                    </div>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Outstanding Quality</h4>
+                    <blockquote>"Very fast turnaround times for custom MDF cuts and promotional gifts. Their team is extremely professional and responsive."</blockquote>
+                    <div class="author">
+                        <div class="name">Arjun M.</div>
+                        <div class="role">Entrepreneur</div>
+                    </div>
+                    <div class="quote-icon">”</div>
                 </div>
             </div>
         </div>
@@ -1615,7 +2338,7 @@
                     </div>
                     <div class="info-item">
                         <div class="icon"><i class="fas fa-clock"></i></div>
-                        <div><h4>Working Hours</h4><p>Mon–Sat: 9:00 AM – 7:00 PM</p></div>
+                        <div><h4>Working Hours</h4><p>Mon to Sat: 9:00 AM to 7:00 PM</p></div>
                     </div>
 
                     <!-- Google Map -->
@@ -1623,7 +2346,7 @@
                         <iframe src="https://maps.google.com/maps?q=Atul%20Tower,%20Dhobi%20Talao,%20Mumbai&t=&z=16&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
 
-                    <div style="margin-top: 2rem; display:flex; gap: 1rem;">
+                    <div class="contact-socials" style="margin-top: 2rem; display:flex; gap: 1rem;">
                         <a href="#" style="color:var(--text-secondary); font-size:1.3rem; transition:color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fab fa-facebook"></i></a>
                         <a href="#" style="color:var(--text-secondary); font-size:1.3rem; transition:color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fab fa-instagram"></i></a>
                         <a href="#" style="color:var(--text-secondary); font-size:1.3rem; transition:color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'"><i class="fab fa-youtube"></i></a>
@@ -1633,8 +2356,8 @@
 
                 <!-- ===== ORDER FORM ===== -->
                 <div class="form-container" data-aos="fade-left">
-                    <h3><i class="fas fa-file-pdf" style="color:var(--accent);"></i> Order UV DTF Stickers</h3>
-                    <p class="form-sub">Choose your size & upload your design. We'll quote & confirm.</p>
+                    <h3><i class="fas fa-file-invoice" style="color:var(--accent);"></i> Place Your Enquiry</h3>
+                    <p class="form-sub">Select a service type and upload your design to get a prompt quote.</p>
                     <form id="orderForm">
                         <div class="form-group">
                             <label for="fullName">Full Name</label>
@@ -1646,18 +2369,50 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="orderType">Order Type</label>
-                            <select id="orderType" required>
-                                <option value="a4">A4 Sheet</option>
-                                <option value="a3">A3 Sheet</option>
-                                <option value="meter">Meter-based (roll)</option>
-                            </select>
+                            <label for="serviceType">Type of Service</label>
+                            <div class="custom-select-wrapper" id="serviceTypeWrapper">
+                                <div class="custom-select-trigger">
+                                    <span class="trigger-text">UV DTF Stickers</span>
+                                    <i class="fas fa-chevron-down select-arrow"></i>
+                                </div>
+                                <div class="custom-select-options">
+                                    <div class="custom-option selected" data-value="dtf-stickers">UV DTF Stickers</div>
+                                    <div class="custom-option" data-value="uv-printing">UV Printing (Direct to Substrate)</div>
+                                    <div class="custom-option" data-value="mdf-cutting">MDF &amp; Acrylic Cutting</div>
+                                    <div class="custom-option" data-value="laser-engraving">Laser Engraving &amp; Marking</div>
+                                </div>
+                                <select id="serviceType" required style="display: none;">
+                                    <option value="dtf-stickers" selected>UV DTF Stickers</option>
+                                    <option value="uv-printing">UV Printing (Direct to Substrate)</option>
+                                    <option value="mdf-cutting">MDF &amp; Acrylic Cutting</option>
+                                    <option value="laser-engraving">Laser Engraving &amp; Marking</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="orderTypeGroup">
+                            <label for="orderType">Format Sizing</label>
+                            <div class="custom-select-wrapper" id="orderTypeWrapper">
+                                <div class="custom-select-trigger">
+                                    <span class="trigger-text">A4 Sheet</span>
+                                    <i class="fas fa-chevron-down select-arrow"></i>
+                                </div>
+                                <div class="custom-select-options">
+                                    <div class="custom-option selected" data-value="a4">A4 Sheet</div>
+                                    <div class="custom-option" data-value="a3">A3 Sheet</div>
+                                    <div class="custom-option" data-value="meter">Meter-based (roll)</div>
+                                </div>
+                                <select id="orderType" required style="display: none;">
+                                    <option value="a4" selected>A4 Sheet</option>
+                                    <option value="a3">A3 Sheet</option>
+                                    <option value="meter">Meter-based (roll)</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group" id="quantityGroup">
-                            <label for="quantity">Quantity</label>
+                            <label for="quantity">Quantity (in <span id="quantityUnit">sheets</span>)</label>
                             <input type="number" id="quantity" min="1" value="1" required />
-                            <small style="color: var(--text-secondary); font-size: 0.75rem;" id="quantityUnit">sheets</small>
                         </div>
 
                         <!-- Price Display -->
@@ -1668,9 +2423,11 @@
 
                         <div class="form-group">
                             <label for="fileUpload">Upload Design (PDF/AI/PNG)</label>
-                            <div class="file-input-wrap">
-                                <input type="file" id="fileUpload" accept=".pdf,.ai,.png,.jpg,.jpeg" required />
-                            </div>
+                            <label class="custom-file-upload">
+                                <input type="file" id="fileUpload" accept=".pdf,.ai,.png,.jpg,.jpeg" required style="display: none;" />
+                                <span class="file-btn"><i class="fas fa-cloud-upload-alt"></i> Choose File</span>
+                                <span class="file-name" id="fileNameText">No file chosen</span>
+                            </label>
                         </div>
 
                         <div class="form-group">
@@ -1718,7 +2475,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Laser Point — Precision Printing &amp; Engraving. All rights reserved.</p>
+                <p>&copy; 2026 Laser Point. Precision Printing &amp; Engraving. All rights reserved.</p>
                 <div class="footer-socials">
                     <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -1739,6 +2496,14 @@
             duration: 800,
         });
 
+        // Dynamic navbar height -> CSS variable for exact hero fill
+        function setNavbarHeight() {
+            const navH = document.getElementById('navbar').getBoundingClientRect().height;
+            document.documentElement.style.setProperty('--navbar-h', navH + 'px');
+        }
+        setNavbarHeight();
+        window.addEventListener('resize', setNavbarHeight);
+
         // Navbar scroll effect
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
@@ -1750,16 +2515,7 @@
             }
         });
 
-        // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const icon = themeToggle.querySelector('i');
-        let isDark = true;
-
-        themeToggle.addEventListener('click', () => {
-            isDark = !isDark;
-            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-            icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
-        });
+        // Dark mode always on - no theme toggle needed
 
         // Hamburger
         const hamburger = document.getElementById('hamburger');
@@ -1767,11 +2523,13 @@
 
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('open');
+            hamburger.classList.toggle('open');
         });
 
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('open');
+                hamburger.classList.remove('open');
             });
         });
 
@@ -1787,6 +2545,11 @@
             meter: { rate: 450, unit: 'meters' }
         };
 
+        const serviceTypeInput = document.getElementById('serviceType');
+        const orderTypeGroup   = document.getElementById('orderTypeGroup');
+        const quantityLabel    = document.querySelector('label[for="quantity"]');
+        const priceDisplay     = document.getElementById('priceDisplay');
+
         function updatePrice() {
             const type = orderType.value;
             const qty = parseInt(quantityInput.value) || 0;
@@ -1796,9 +2559,75 @@
             quantityUnit.textContent = pricing[type].unit;
         }
 
-        orderType.addEventListener('change', updatePrice);
+        function handleServiceChange() {
+            const service = serviceTypeInput.value;
+            if (service === 'dtf-stickers') {
+                orderTypeGroup.style.display = 'block';
+                priceDisplay.style.display = 'flex';
+                quantityLabel.innerHTML = `Quantity (in <span id="quantityUnit">${pricing[orderType.value].unit}</span>)`;
+                updatePrice();
+            } else {
+                orderTypeGroup.style.display = 'none';
+                priceDisplay.style.display = 'none';
+                quantityLabel.innerHTML = 'Quantity (pieces)';
+            }
+        }
+
+        orderType.addEventListener('change', () => {
+            updatePrice();
+            if (serviceTypeInput.value === 'dtf-stickers') {
+                quantityLabel.innerHTML = `Quantity (in <span id="quantityUnit">${pricing[orderType.value].unit}</span>)`;
+            }
+        });
         quantityInput.addEventListener('input', updatePrice);
-        updatePrice();
+        // Initialize Custom Select elements
+        document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+            const trigger = wrapper.querySelector('.custom-select-trigger');
+            const triggerText = wrapper.querySelector('.trigger-text');
+            const options = wrapper.querySelectorAll('.custom-option');
+            const nativeSelect = wrapper.querySelector('select');
+
+            // Open/close menu on click
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Close other custom selects first
+                document.querySelectorAll('.custom-select-wrapper').forEach(other => {
+                    if (other !== wrapper) other.classList.remove('open');
+                });
+                wrapper.classList.toggle('open');
+            });
+
+            // Option item clicks
+            options.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const val = option.getAttribute('data-value');
+                    const text = option.textContent;
+
+                    // Update selected states
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    triggerText.textContent = text;
+                    wrapper.classList.remove('open');
+
+                    // Sync to hidden native select
+                    if (nativeSelect.value !== val) {
+                        nativeSelect.value = val;
+                        nativeSelect.dispatchEvent(new Event('change'));
+                    }
+                });
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        window.addEventListener('click', () => {
+            document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+                wrapper.classList.remove('open');
+            });
+        });
+
+        // Run once on load
+        handleServiceChange();
 
         // ── Toast helper ────────────────────────────────────────────────────
         const toast = document.getElementById('toast');
@@ -1835,7 +2664,8 @@
                 const formData = new FormData();
                 formData.append('fullName',     name);
                 formData.append('emailAddress', email);
-                formData.append('orderType',    orderType.value);
+                formData.append('serviceType',  serviceTypeInput.value);
+                formData.append('orderType',    serviceTypeInput.value === 'dtf-stickers' ? orderType.value : 'custom');
                 formData.append('quantity',     quantityInput.value);
                 formData.append('notes',        document.getElementById('notes').value);
                 formData.append('designFile',   file);
@@ -1846,7 +2676,29 @@
                 if (data.success) {
                     showToast(data.message, 'success');
                     form.reset();
-                    updatePrice();
+                    document.getElementById('fileNameText').textContent = 'No file chosen';
+                    
+                    // Reset Custom Selects UI
+                    const sWrapper = document.getElementById('serviceTypeWrapper');
+                    if (sWrapper) {
+                        const defaultOpt = sWrapper.querySelector('.custom-option[data-value="dtf-stickers"]');
+                        sWrapper.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                        if (defaultOpt) {
+                            defaultOpt.classList.add('selected');
+                            sWrapper.querySelector('.trigger-text').textContent = defaultOpt.textContent;
+                        }
+                    }
+                    const oWrapper = document.getElementById('orderTypeWrapper');
+                    if (oWrapper) {
+                        const defaultOpt = oWrapper.querySelector('.custom-option[data-value="a4"]');
+                        oWrapper.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                        if (defaultOpt) {
+                            defaultOpt.classList.add('selected');
+                            oWrapper.querySelector('.trigger-text').textContent = defaultOpt.textContent;
+                        }
+                    }
+
+                    handleServiceChange();
                 } else {
                     showToast(data.message || 'Something went wrong.', 'error');
                 }
@@ -1857,6 +2709,53 @@
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Order Request';
             }
         });
+
+        // Card clicks scroll directly to form
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const serviceKey = card.getAttribute('data-service');
+                const contactSection = document.getElementById('contact');
+ 
+                if (serviceTypeInput && serviceKey) {
+                    serviceTypeInput.value = serviceKey;
+
+                    // Sync the Custom Select UI!
+                    const wrapper = document.getElementById('serviceTypeWrapper');
+                    if (wrapper) {
+                        const option = wrapper.querySelector(`.custom-option[data-value="${serviceKey}"]`);
+                        if (option) {
+                            wrapper.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                            option.classList.add('selected');
+                            wrapper.querySelector('.trigger-text').textContent = option.textContent;
+                        }
+                    }
+
+                    handleServiceChange();
+                }
+ 
+                if (contactSection) {
+                    contactSection.scrollIntoView({ behavior: 'smooth' });
+                    // Optionally focus the first field
+                    setTimeout(() => {
+                        const nameField = document.getElementById('fullName');
+                        if (nameField) nameField.focus();
+                    }, 800);
+                }
+            });
+        });
+
+        // Custom file input listener
+        const fileUploadInput = document.getElementById('fileUpload');
+        const fileNameLabel = document.getElementById('fileNameText');
+        if (fileUploadInput && fileNameLabel) {
+            fileUploadInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    fileNameLabel.textContent = this.files[0].name;
+                } else {
+                    fileNameLabel.textContent = 'No file chosen';
+                }
+            });
+        }
     </script>
 
 </body>
