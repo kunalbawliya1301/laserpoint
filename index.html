@@ -1894,6 +1894,138 @@
             pointer-events: none;
             cursor: not-allowed;
         }
+
+        /* ===== FAQ ACCORDION ===== */
+        .faq-section {
+            padding: 5rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .faq-item:hover {
+            border-color: rgba(245, 166, 35, 0.25);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .faq-item.active {
+            border-color: var(--accent);
+            box-shadow: 0 12px 30px rgba(245, 166, 35, 0.08);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .faq-question {
+            padding: 1.5rem 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            gap: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .faq-question h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.4;
+            transition: color 0.3s ease;
+        }
+
+        .faq-item:hover .faq-question h3 {
+            color: var(--accent-light);
+        }
+
+        .faq-item.active .faq-question h3 {
+            color: var(--accent);
+        }
+
+        .faq-icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .faq-item:hover .faq-icon-box {
+            background: rgba(245, 166, 35, 0.08);
+            color: var(--accent);
+            border-color: rgba(245, 166, 35, 0.2);
+        }
+
+        .faq-item.active .faq-icon-box {
+            background: var(--accent);
+            color: #0a0f1f;
+            border-color: var(--accent);
+            transform: rotate(180deg);
+        }
+
+        .faq-icon-box i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .faq-answer-content {
+            padding: 0 1.8rem 1.8rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        @media (max-width: 768px) {
+            .faq-section {
+                padding: 3.5rem 0 !important;
+            }
+            .faq-question {
+                padding: 1.2rem 1.4rem;
+                gap: 1rem;
+            }
+            .faq-question h3 {
+                font-size: 0.85rem;
+            }
+            .faq-answer-content {
+                padding: 0 1.4rem 1.4rem;
+                font-size: 0.76rem;
+                line-height: 1.5;
+            }
+            .faq-icon-box {
+                width: 28px;
+                height: 28px;
+            }
+            .faq-icon-box i {
+                font-size: 0.72rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1927,6 +2059,7 @@
                 <li><a href="#services">Services</a></li>
                 <li><a href="#work">Work</a></li>
                 <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#faq">FAQ</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li class="mobile-quote-item"><a href="#contact" class="btn-primary mobile-quote-btn">Get a Quote</a></li>
             </ul>
@@ -2314,6 +2447,97 @@
         </div>
     </section>
 
+    <!-- ===== FAQ ===== -->
+    <section id="faq" class="faq-section">
+        <div class="container">
+            <div class="section-centered" data-aos="fade-up">
+                <span class="section-badge">FAQ</span>
+                <h2 class="section-title">Frequently Asked <span class="highlight">Questions</span></h2>
+                <p class="section-subtitle">Have questions about our custom printing and engraving services? Find answers here.</p>
+            </div>
+            
+            <div class="faq-container" data-aos="fade-up" data-aos-delay="100">
+                <!-- Item 1 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What file formats do you accept for design uploads?</h3>
+                        <div class="faq-icon-box"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            We accept high-resolution files in PDF, AI (Adobe Illustrator), PNG, JPG, and JPEG formats. For laser engraving and MDF/acrylic cutting, vector files (.AI, .PDF, or .SVG) are highly recommended to ensure precise cutting paths and optimal print quality.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What is the turnaround time for custom orders?</h3>
+                        <div class="faq-icon-box"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Our standard turnaround time is 2 to 4 business days depending on the project volume and service type. For urgent needs, same-day or next-day express printing options are available for local pickup at our Dhobi Talao units in Mumbai.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Do you have a minimum order quantity (MOQ)?</h3>
+                        <div class="faq-icon-box"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            No, we do not enforce any strict minimum order quantities. We cater to single custom personal gifts, small batch prototype runs, as well as high-volume roll-based orders for businesses. No job is too small or too large for us.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What materials can be laser engraved or UV printed?</h3>
+                        <div class="faq-icon-box"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Our flatbed UV printer can directly print on wood, glass, metals, acrylics, leather, and plastic substrates. Laser engraving is perfect for metal markings, wooden items, personalized corporate gifts, and acrylic signage. Precision MDF cutting is suitable for wood, MDF, acrylic, and composite boards.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What are UV DTF stickers and how do they work?</h3>
+                        <div class="faq-icon-box"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            UV DTF (Direct to Film) stickers are high-quality transfers printed with a raised gloss/varnish finish. You simply peel the transfer film, apply it onto any hard, clean surface (like mugs, water bottles, laptops, glass, or plastic), rub it firmly, and peel the clear top film off. The sticker transfers perfectly, looking like a direct print.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 6 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Do you ship nationwide across India?</h3>
+                        <div class="faq-icon-box"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Yes! We ship our customized print products, UV DTF sticker rolls, and engraved items to all major cities and states across India. We also support self-pickup from our physical shop units in Mumbai for customers who need their orders immediately.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ===== CONTACT ===== -->
     <section id="contact" style="background: var(--secondary);">
         <div class="container">
@@ -2470,6 +2694,7 @@
                     <h4>Connect</h4>
                     <a href="#contact">Contact</a>
                     <a href="#testimonials">Testimonials</a>
+                    <a href="#faq">FAQ</a>
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms</a>
                 </div>
@@ -2708,6 +2933,32 @@
                 submitBtn.classList.remove('loading');
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Order Request';
             }
+        });
+
+        // FAQ Accordion Toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const answer = item.querySelector('.faq-answer');
+                const isActive = item.classList.contains('active');
+
+                // Close other items
+                document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                        otherItem.querySelector('.faq-answer').style.maxHeight = null;
+                    }
+                });
+
+                // Toggle current item
+                if (isActive) {
+                    item.classList.remove('active');
+                    answer.style.maxHeight = null;
+                } else {
+                    item.classList.add('active');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                }
+            });
         });
 
         // Card clicks scroll directly to form
