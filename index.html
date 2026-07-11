@@ -2652,6 +2652,7 @@
                                 <span class="file-btn"><i class="fas fa-cloud-upload-alt"></i> Choose File</span>
                                 <span class="file-name" id="fileNameText">No file chosen</span>
                             </label>
+                            <div id="fileSizeWarning" style="display: none; color: #ff6b6b; font-size: 0.85rem; margin-top: 0.5rem; line-height: 1.4;"></div>
                         </div>
 
                         <div class="form-group">
@@ -2876,7 +2877,7 @@
 
             const name  = document.getElementById('fullName').value.trim();
             const email = document.getElementById('emailAddress').value.trim();
-            const file  = document.getElementById('fileUpload').files[0];
+            let file    = document.getElementById('fileUpload').files[0];
 
             if (!name || !email || !file) {
                 showToast('Please fill all fields and upload a design file.', 'error');
@@ -2888,6 +2889,28 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
             try {
+                // Auto-compress image on mobile/client side if > 4.5MB
+                if (file.size > 4.5 * 1024 * 1024 && file.type.startsWith('image/')) {
+                    submitBtn.innerHTML = '<i class="fas fa-compress-arrows-alt fa-spin"></i> Compressing Image...';
+                    try {
+                        const compressed = await compressImage(file, 4.0);
+                        if (compressed.size < file.size) {
+                            file = compressed;
+                            console.log(`Auto-compressed: ${(file.size / (1024*1024)).toFixed(2)} MB`);
+                        }
+                    } catch (compressErr) {
+                        console.error('Image compression failed', compressErr);
+                    }
+                }
+
+                // If file is still too large (e.g. PDF/AI or uncompressible image)
+                if (file.size > 4.5 * 1024 * 1024) {
+                    showToast('File size exceeds the 4.5 MB server limit. Please email/WhatsApp it to us.', 'error');
+                    submitBtn.classList.remove('loading');
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Order Request';
+                    return;
+                }
+
                 const formData = new FormData();
                 formData.append('fullName',     name);
                 formData.append('emailAddress', email);
@@ -2898,12 +2921,29 @@
                 formData.append('designFile',   file);
 
                 const res  = await fetch('/send-order', { method: 'POST', body: formData });
+                
+                if (!res.ok) {
+                    if (res.status === 413) {
+                        showToast('File is too large for the server. Please email or WhatsApp it to us.', 'error');
+                    } else {
+                        try {
+                            const errData = await res.json();
+                            showToast(errData.message || `Server error (${res.status}).`, 'error');
+                        } catch {
+                            showToast(`HTTP error ${res.status}. Please try again.`, 'error');
+                        }
+                    }
+                    return;
+                }
+
                 const data = await res.json();
 
                 if (data.success) {
                     showToast("Thank you! We will get back to you within 24 hours.", 'success');
                     form.reset();
                     document.getElementById('fileNameText').textContent = 'No file chosen';
+                    const fsWarning = document.getElementById('fileSizeWarning');
+                    if (fsWarning) fsWarning.style.display = 'none';
                     
                     // Reset Custom Selects UI
                     const sWrapper = document.getElementById('serviceTypeWrapper');
@@ -2930,7 +2970,8 @@
                     showToast(data.message || 'Something went wrong.', 'error');
                 }
             } catch (err) {
-                showToast('Network error. Please try again.', 'error');
+                console.error('Submit error:', err);
+                showToast('Connection error. Please check your network and try again.', 'error');
             } finally {
                 submitBtn.classList.remove('loading');
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Order Request';
@@ -2997,15 +3038,95 @@
             });
         });
 
+        // Client-side image compression helper
+        function compressImage(file, maxSizeMB = 4.0) {
+            return new Promise((resolve) => {
+                if (!file.type.startsWith('image/')) {
+                    resolve(file); // Return original if not an image
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Limit resolution to avoid huge canvases
+                        const maxDim = 2500;
+                        if (width > maxDim || height > maxDim) {
+                            if (width > height) {
+                                height = Math.round((height * maxDim) / width);
+                                width = maxDim;
+                            } else {
+                                width = Math.round((width * maxDim) / height);
+                                height = maxDim;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        let quality = 0.8;
+                        
+                        function toBlob() {
+                            canvas.toBlob((blob) => {
+                                if (!blob) {
+                                    resolve(file);
+                                    return;
+                                }
+                                
+                                if (blob.size > maxSizeMB * 1024 * 1024 && quality > 0.2) {
+                                    quality -= 0.15;
+                                    toBlob();
+                                } else {
+                                    const compressedFile = new File([blob], file.name, {
+                                        type: file.type || 'image/jpeg',
+                                        lastModified: Date.now()
+                                    });
+                                    resolve(compressedFile);
+                                }
+                            }, file.type || 'image/jpeg', quality);
+                        }
+
+                        toBlob();
+                    };
+                    img.onerror = () => resolve(file);
+                };
+                reader.onerror = () => resolve(file);
+            });
+        }
+
         // Custom file input listener
         const fileUploadInput = document.getElementById('fileUpload');
         const fileNameLabel = document.getElementById('fileNameText');
+        const fileSizeWarning = document.getElementById('fileSizeWarning');
+
         if (fileUploadInput && fileNameLabel) {
             fileUploadInput.addEventListener('change', function() {
                 if (this.files && this.files.length > 0) {
-                    fileNameLabel.textContent = this.files[0].name;
+                    const file = this.files[0];
+                    fileNameLabel.textContent = file.name;
+                    
+                    const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                    if (file.size > 4.5 * 1024 * 1024) {
+                        fileSizeWarning.innerHTML = `<i class="fas fa-exclamation-triangle"></i> This file is large (${sizeMB} MB). Vercel server limit is 4.5 MB.<br/>` +
+                            `• If it is an image, we will try to compress it automatically when you submit.<br/>` +
+                            `• If it is a PDF/AI vector file, please email it to <a href="mailto:order.laserpoint@gmail.com" style="color: var(--accent);">order.laserpoint@gmail.com</a> or send via WhatsApp at <a href="https://wa.me/919892939320" style="color: var(--accent);" target="_blank">+91 98929 39320</a>.`;
+                        fileSizeWarning.style.display = 'block';
+                    } else {
+                        fileSizeWarning.style.display = 'none';
+                    }
                 } else {
                     fileNameLabel.textContent = 'No file chosen';
+                    if (fileSizeWarning) fileSizeWarning.style.display = 'none';
                 }
             });
         }
