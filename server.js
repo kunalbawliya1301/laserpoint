@@ -35,24 +35,78 @@ transporter.verify((error) => {
 });
 
 const pricing = {
-    a4:    { label: 'A4 Sheet',           rate: 50,  unit: 'sheets' },
-    a3:    { label: 'A3 Sheet',           rate: 100, unit: 'sheets' },
-    meter: { label: 'Meter-based (Roll)', rate: 450, unit: 'meters' }
+    a4:    { label: 'A4 Sheet',           rate: 200, unit: 'sheets' },
+    a3:    { label: 'A3 Sheet',           rate: 350, unit: 'sheets' },
+    meter: { label: 'Meter-based (Roll)', rate: 550, unit: 'meters' }
+};
+
+const serviceLabels = {
+    'dtf-stickers': 'UV DTF Stickers',
+    'uv-printing': 'UV Printing (Direct to Substrate)',
+    'mdf-cutting': 'MDF & Acrylic Cutting',
+    'laser-engraving': 'Laser Engraving & Marking'
 };
 
 app.post('/send-order', upload.single('designFile'), async (req, res) => {
     try {
-        const { fullName, emailAddress, orderType, quantity, notes } = req.body;
+        const { fullName, emailAddress, serviceType, orderType, quantity, notes } = req.body;
         const file = req.file;
 
-        if (!fullName || !emailAddress || !orderType || !quantity)
+        if (!fullName || !emailAddress || !serviceType || !quantity)
             return res.status(400).json({ success: false, message: 'Missing required fields.' });
         if (!file)
             return res.status(400).json({ success: false, message: 'Design file is required.' });
 
-        const order = pricing[orderType] || { label: orderType, rate: 0, unit: '' };
-        const total = parseInt(quantity) * order.rate;
+        const isDtf = serviceType === 'dtf-stickers';
+        const serviceLabel = serviceLabels[serviceType] || serviceType;
+        const order = isDtf ? (pricing[orderType] || { label: orderType, rate: 0, unit: '' }) : null;
+        const total = isDtf ? parseInt(quantity) * order.rate : 0;
         const now   = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
+        // Build HTML table rows for owner and customer emails dynamically
+        let ownerRows = `
+<tr><td>Customer</td><td>${fullName}</td></tr>
+<tr><td>Email</td><td><a href="mailto:${emailAddress}">${emailAddress}</a></td></tr>
+<tr><td>Service Type</td><td>${serviceLabel}</td></tr>
+`;
+        if (isDtf && order) {
+            ownerRows += `
+<tr><td>Format Sizing</td><td>${order.label}</td></tr>
+<tr><td>Quantity</td><td>${quantity} ${order.unit}</td></tr>
+<tr><td>Est. Price</td><td><span class="amount">Rs.${total}</span></td></tr>
+`;
+        } else {
+            ownerRows += `
+<tr><td>Quantity</td><td>${quantity} pieces</td></tr>
+`;
+        }
+        ownerRows += `
+<tr><td>Design File</td><td>${file.originalname} (${(file.size/1024).toFixed(1)} KB)</td></tr>
+<tr><td>Notes</td><td>${notes || 'None'}</td></tr>
+`;
+
+        let customerRows = `
+<tr><td>Service Type</td><td>${serviceLabel}</td></tr>
+`;
+        if (isDtf && order) {
+            customerRows += `
+<tr><td>Format Sizing</td><td>${order.label}</td></tr>
+<tr><td>Quantity</td><td>${quantity} ${order.unit}</td></tr>
+`;
+        } else {
+            customerRows += `
+<tr><td>Quantity</td><td>${quantity} pieces</td></tr>
+`;
+        }
+        customerRows += `
+<tr><td>Design File</td><td>${file.originalname}</td></tr>
+<tr><td>Notes</td><td>${notes || 'None'}</td></tr>
+`;
+        if (isDtf) {
+            customerRows += `
+<tr class="tr"><td>Est. Price</td><td>Rs.${total}</td></tr>
+`;
+        }
 
         const ownerHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"/>
 <style>body{font-family:Arial,sans-serif;background:#f4f6fa;margin:0}
@@ -68,13 +122,7 @@ td:first-child{font-weight:600;color:#0a0f1f;width:38%}.amount{font-size:22px;fo
 <div class="w"><div class="h"><h1>LaserPoint</h1><p>New Order — ${now} IST</p></div>
 <div class="b"><span class="badge">New Order</span>
 <table>
-<tr><td>Customer</td><td>${fullName}</td></tr>
-<tr><td>Email</td><td><a href="mailto:${emailAddress}">${emailAddress}</a></td></tr>
-<tr><td>Order Type</td><td>${order.label}</td></tr>
-<tr><td>Quantity</td><td>${quantity} ${order.unit}</td></tr>
-<tr><td>Est. Price</td><td><span class="amount">Rs.${total}</span></td></tr>
-<tr><td>Design File</td><td>${file.originalname} (${(file.size/1024).toFixed(1)} KB)</td></tr>
-<tr><td>Notes</td><td>${notes || 'None'}</td></tr>
+${ownerRows}
 </table>
 <p style="font-size:13px;color:#8a9ab0">Design file attached below.</p>
 <a class="btn" href="mailto:${emailAddress}?subject=Re:%20Your%20LaserPoint%20Order">Reply to Customer</a>
@@ -100,11 +148,7 @@ td{padding:12px 16px;font-size:14px;color:#2d3748;border-top:1px solid #eef0f4}t
 <p class="sub">Thank you for choosing Laser Point. Here is your order summary.</p>
 <table>
 <tr><th>Detail</th><th>Value</th></tr>
-<tr><td>Order Type</td><td>${order.label}</td></tr>
-<tr><td>Quantity</td><td>${quantity} ${order.unit}</td></tr>
-<tr><td>Design File</td><td>${file.originalname}</td></tr>
-<tr><td>Notes</td><td>${notes || 'None'}</td></tr>
-<tr class="tr"><td>Est. Price</td><td>Rs.${total}</td></tr>
+${customerRows}
 </table>
 <div class="note"><strong>What is next?</strong> Our team will review your design and confirm within a few hours.</div>
 <p style="font-size:13px;color:#8a9ab0">Working hours: Mon-Sat, 9 AM - 7 PM IST</p>
@@ -114,7 +158,7 @@ td{padding:12px 16px;font-size:14px;color:#2d3748;border-top:1px solid #eef0f4}t
             from:    '"Laser Point Orders" <' + process.env.MAIL_USER + '>',
             to:      process.env.OWNER_EMAIL,
             replyTo: emailAddress,
-            subject: 'New Order: ' + order.label + ' x' + quantity + ' from ' + fullName,
+            subject: `New Order: ${isDtf ? order.label : serviceLabel} x${quantity} from ${fullName}`,
             html:    ownerHtml,
             attachments: [{ filename: file.originalname, content: file.buffer, contentType: file.mimetype }]
         });
@@ -127,7 +171,7 @@ td{padding:12px 16px;font-size:14px;color:#2d3748;border-top:1px solid #eef0f4}t
         });
 
         console.log('Emails sent to owner and customer: ' + emailAddress);
-        res.json({ success: true, message: 'Order received! Confirmation sent to ' + emailAddress + '.' });
+        res.json({ success: true, message: 'Thank you! We will get back to you within 24 hours.' });
 
     } catch (err) {
         console.error('Error sending mail:', err);

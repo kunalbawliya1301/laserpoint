@@ -2229,27 +2229,27 @@
             <div class="work-grid">
                 <!-- UV Print on Acrylic: vivid UV flatbed print on clear acrylic/glass -->
                 <div class="work-item bento-w2" data-aos="zoom-in" data-aos-delay="0">
-                    <img src="./UV Print on Acrylic.png" alt="UV Print on Acrylic" loading="lazy" />
+                    <img src="./UV Print on Acrylic.jpeg" alt="UV Print on Acrylic" loading="lazy" />
                     <div class="overlay"><h4>UV Print on Acrylic</h4><p>Vibrant, durable finish</p></div>
                 </div>
                 <!-- DTF Sticker Sheets: colorful sticker/decal sheet printing -->
                 <div class="work-item bento-h2" data-aos="zoom-in" data-aos-delay="100">
-                    <img src="./DTF Sticker Sheets.png" alt="DTF Sticker Sheets" loading="lazy" />
+                    <img src="./DTF Sticker Sheets.jpeg" alt="DTF Sticker Sheets" loading="lazy" />
                     <div class="overlay"><h4>DTF Sticker Sheets</h4><p>A3 &amp; A4 format, full color</p></div>
                 </div>
                 <!-- Laser Marking: laser beam marking on metal surface -->
                 <div class="work-item" data-aos="zoom-in" data-aos-delay="200">
-                    <img src="./Laser Marking.png" alt="Laser Marking" loading="lazy" />
+                    <img src="./Laser Marking.jpeg" alt="Laser Marking" loading="lazy" />
                     <div class="overlay"><h4>Laser Marking</h4><p>Metal &amp; plastic parts</p></div>
                 </div>
                 <!-- Engraved Gifts: laser engraved wooden/personalized gift items -->
                 <div class="work-item" data-aos="zoom-in" data-aos-delay="300">
-                    <img src="./Engraved Gifts.png" alt="Engraved Gifts" loading="lazy" />
+                    <img src="./Engraved Gifts.jpeg" alt="Engraved Gifts" loading="lazy" />
                     <div class="overlay"><h4>Engraved Gifts</h4><p>Personalized &amp; elegant</p></div>
                 </div>
                 <!-- Custom Prototypes: UV printing on custom product prototypes -->
                 <div class="work-item" data-aos="zoom-in" data-aos-delay="400">
-                    <img src="./Custom Prototypes.png" alt="Custom Prototypes" loading="lazy" />
+                    <img src="./Custom Prototypes.jpeg" alt="Custom Prototypes" loading="lazy" />
                     <div class="overlay"><h4>Custom Prototypes</h4><p>Rapid UV printing</p></div>
                 </div>
                 <!-- Promotional Items: branded merchandise, pens, mugs, printed items -->
@@ -2765,9 +2765,9 @@
         const quantityUnit = document.getElementById('quantityUnit');
 
         const pricing = {
-            a4: { rate: 50, unit: 'sheets' },
-            a3: { rate: 100, unit: 'sheets' },
-            meter: { rate: 450, unit: 'meters' }
+            a4: { rate: 200, unit: 'sheets' },
+            a3: { rate: 350, unit: 'sheets' },
+            meter: { rate: 550, unit: 'meters' }
         };
 
         const serviceTypeInput = document.getElementById('serviceType');
@@ -2797,6 +2797,8 @@
                 quantityLabel.innerHTML = 'Quantity (pieces)';
             }
         }
+
+        serviceTypeInput.addEventListener('change', handleServiceChange);
 
         orderType.addEventListener('change', () => {
             updatePrice();
@@ -2899,7 +2901,7 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    showToast(data.message, 'success');
+                    showToast("Thank you! We will get back to you within 24 hours.", 'success');
                     form.reset();
                     document.getElementById('fileNameText').textContent = 'No file chosen';
                     
