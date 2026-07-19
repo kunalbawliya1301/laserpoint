@@ -43,7 +43,7 @@ const pricing = {
 const serviceLabels = {
     'dtf-stickers': 'UV DTF Stickers',
     'uv-printing': 'UV Printing (Direct to Substrate)',
-    'mdf-cutting': 'MDF & Acrylic Cutting',
+    'acrylic-printing': 'Acrylic Printing',
     'laser-engraving': 'Laser Engraving & Marking'
 };
 

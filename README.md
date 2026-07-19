@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  A modern, full-featured business website for <strong>Laser Point</strong> — a precision printing & engraving studio offering UV Printing, UV DTF Stickers, MDF Cutting, and Laser Engraving services.
+  A modern, full-featured business website for <strong>Laser Point</strong> — a precision printing & engraving studio offering UV Printing, UV DTF Stickers, Acrylic Printing, and Laser Engraving services.
 </p>
 
 <p align="center">
