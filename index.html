@@ -976,6 +976,10 @@
         }
 
         /* ===== TESTIMONIAL TICKER LOOP ===== */
+        #testimonials {
+            display: none !important;
+        }
+
         .ticker-wrap {
             width: 100%;
             overflow: hidden;
@@ -1422,8 +1426,9 @@
             border-top: 1px solid rgba(255, 255, 255, 0.04);
             padding-top: 1.5rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            text-align: center;
             flex-wrap: wrap;
             gap: 1rem;
         }
@@ -2105,7 +2110,6 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#services">Services</a></li>
                 <li><a href="#work">Work</a></li>
-                <li><a href="#testimonials">Testimonials</a></li>
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li class="mobile-quote-item"><a href="#contact" class="btn-primary mobile-quote-btn">Get a Quote</a></li>
@@ -2219,7 +2223,7 @@
 
                 <!-- UV Flatbed Printing Machine -->
                 <div class="service-card" data-service="uv-printing" data-aos="fade-up" data-aos-delay="0">
-                    <img class="sc-bg" src="./uv-printing.png" alt="UV Flatbed Printing Machine" loading="lazy" />
+                    <img class="sc-bg" src="./Service-UV-Printing.png" alt="UV Flatbed Printing Machine" loading="lazy" />
                     <span class="sc-tag"><i class="fas fa-sun"></i> &nbsp;UV Flatbed</span>
                     <div class="sc-content">
                         <h3>UV Printing</h3>
@@ -2230,7 +2234,7 @@
 
                 <!-- UV DTF Sticker Printing Machine -->
                 <div class="service-card" data-service="dtf-stickers" data-aos="fade-up" data-aos-delay="100">
-                    <img class="sc-bg" src="./dtf-stickers.png" alt="UV DTF Sticker Printing Machine" loading="lazy" />
+                    <img class="sc-bg" src="./Service-UV-DTF-Stickers.png" alt="UV DTF Sticker Printing Machine" loading="lazy" />
                     <span class="sc-tag"><i class="fas fa-sticky-note"></i> &nbsp;DTF</span>
                     <div class="sc-content">
                         <h3>UV DTF Stickers</h3>
@@ -2252,7 +2256,7 @@
 
                 <!-- Laser Engraving Machine -->
                 <div class="service-card" data-service="laser-engraving" data-aos="fade-up" data-aos-delay="300">
-                    <img class="sc-bg" src="./laser-engraving.png" alt="Laser Engraving Machine" loading="lazy" />
+                    <img class="sc-bg" src="./Service-Laser-Engraving.png" alt="Laser Engraving Machine" loading="lazy" />
                     <span class="sc-tag"><i class="fas fa-bolt"></i> &nbsp;Laser</span>
                     <div class="sc-content">
                         <h3>Laser Engraving</h3>
@@ -2280,36 +2284,56 @@
                     <div class="overlay"><h4>UV Print on Acrylic</h4><p>Vibrant, durable finish</p></div>
                 </div>
                 <!-- DTF Sticker Sheets: colorful sticker/decal sheet printing -->
-                <div class="work-item bento-h2" data-aos="zoom-in" data-aos-delay="100">
+                <div class="work-item bento-h2" data-aos="zoom-in" data-aos-delay="50">
                     <img src="./Work-DTF-Sticker-Sheets.png" alt="DTF Sticker Sheets" loading="lazy" />
                     <div class="overlay"><h4>DTF Stickers</h4><p>Vivid 3D transfer decals &amp; rolls</p></div>
                 </div>
                 <!-- Laser Marking: laser beam marking on metal surface -->
-                <div class="work-item" data-aos="zoom-in" data-aos-delay="200">
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="100">
                     <img src="./Work-Laser-Marking.png" alt="Laser Marking" loading="lazy" />
                     <div class="overlay"><h4>Laser Marking</h4><p>Metal &amp; plastic parts</p></div>
                 </div>
                 <!-- DTF Sticker Stationery: custom diaries & notebooks with DTF transfer stickers -->
-                <div class="work-item" data-aos="zoom-in" data-aos-delay="300">
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="150">
                     <img src="./Work-Engraved-Stationery.png" alt="DTF Sticker Stationery" loading="lazy" />
                     <div class="overlay"><h4>DTF Sticker Stationery</h4><p>Custom diaries &amp; leather transfers</p></div>
                 </div>
                 <!-- Custom Prototypes: UV printing on custom product prototypes -->
-                <div class="work-item" data-aos="zoom-in" data-aos-delay="400">
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="200">
                     <img src="./Work-Custom-Prototypes.png" alt="Custom Prototypes" loading="lazy" />
                     <div class="overlay"><h4>Custom Prototypes</h4><p>Rapid UV printing</p></div>
                 </div>
                 <!-- Promotional Items: branded merchandise, pens, mugs, printed items -->
-                <div class="work-item bento-w2" data-aos="zoom-in" data-aos-delay="500">
+                <div class="work-item bento-w2" data-aos="zoom-in" data-aos-delay="250">
                     <img src="./Work-Promotional-Items.png" alt="Promotional Items" loading="lazy" />
                     <div class="overlay"><h4>Promotional Items</h4><p>Branded merchandise</p></div>
+                </div>
+                <!-- Engraved Gifts: personalized awards & engraved gifts -->
+                <div class="work-item bento-h2" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="./Work-Custom-Cricket-Bats.png" alt="Engraved Gifts" loading="lazy" />
+                    <div class="overlay"><h4>Custom Cricket Bats</h4><p>Precision laser engraved personalization</p></div>
+                </div>
+                <!-- Acrylic Wall Art: direct UV print on clear acrylic -->
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="350">
+                    <img src="./Work-Acrylic-Name-Plate.png" alt="Acrylic Wall Art" loading="lazy" />
+                    <div class="overlay"><h4>Acrylic Name Plate</h4><p>High-gloss direct UV print</p></div>
+                </div>
+                <!-- Precision Sample Prototypes -->
+                <div class="work-item" data-aos="zoom-in" data-aos-delay="400">
+                    <img src="./Work-Corporate-Inauguration-Plaque.png" alt="Precision Sample Prototypes" loading="lazy" />
+                    <div class="overlay"><h4>Corporate Inauguration Plaque</h4><p>Premium acrylic engraving with gold finish</p></div>
+                </div>
+                <!-- Custom DTF Sticker Sheets -->
+                <div class="work-item bento-w2" data-aos="zoom-in" data-aos-delay="450">
+                    <img src="./Work-Commercial-Sign-Boards.png" alt="Custom DTF Sticker Sheets" loading="lazy" />
+                    <div class="overlay"><h4>Commercial Sign Boards</h4><p>Durable outdoor branding solutions</p></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ===== TESTIMONIALS ===== -->
-    <section id="testimonials" style="overflow: hidden; padding-bottom: 5rem;">
+    <!-- ===== TESTIMONIALS (HIDDEN) ===== -->
+    <section id="testimonials" style="display: none !important; overflow: hidden; padding-bottom: 5rem;">
         <div class="container">
             <div class="section-centered" data-aos="fade-up">
                 <span class="section-badge">Testimonials</span>
@@ -2601,7 +2625,11 @@
                     </div>
                     <div class="info-item">
                         <div class="icon"><i class="fas fa-phone-alt"></i></div>
-                        <div><h4>Call Us</h4><p>+91 98929 39320</p></div>
+                        <div>
+                            <h4>Call Us</h4>
+                            <p>+91 98929 39320</p>
+                            <p style="margin-top: 0.2rem;">Office number: +91 98929 34021</p>
+                        </div>
                     </div>
                     <div class="info-item">
                         <div class="icon"><i class="fas fa-envelope"></i></div>
@@ -2723,6 +2751,7 @@
                 <div class="footer-brand">
                     <a href="#home" class="logo" aria-label="Laser Point Home"><img src="./logo.png" id="footerLogo" alt="Laser Point Logo" /></a>
                     <p>Precision printing &amp; engraving solutions. Crafted with light, built to last.</p>
+                    <p style="margin-top: 0.6rem; font-size: 0.88rem; color: var(--text-secondary);"><i class="fas fa-phone-alt" style="color: var(--accent); margin-right: 0.4rem;"></i> Office number: +91 98929 34021</p>
                 </div>
                 <div class="footer-links">
                     <h4>Quick Links</h4>
@@ -2741,7 +2770,6 @@
                 <div class="footer-links">
                     <h4>Connect</h4>
                     <a href="#contact">Contact</a>
-                    <a href="#testimonials">Testimonials</a>
                     <a href="#faq">FAQ</a>
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms</a>
@@ -2749,12 +2777,7 @@
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2026 Laser Point. Precision Printing &amp; Engraving. All rights reserved. | Designed & Developed with <span style="color: #ff4b5c; margin: 0 2px;">♥</span> by <a href="https://itsdesignex.com/" target="_blank" rel="noopener noreferrer">DesignEX</a></p>
-                <div class="footer-socials">
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                </div>
+
             </div>
         </div>
     </footer>
